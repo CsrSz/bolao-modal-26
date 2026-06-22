@@ -1,0 +1,17 @@
+[
+    {
+        "id": 1,
+        "mandante": 2,
+        "visitante": 1
+    },
+    {
+        "id": 2,
+        "mandante": 0,
+        "visitante": 0
+    },
+    {
+        "id": 3,
+        "mandante": 3,
+        "visitante": 2
+    }
+]

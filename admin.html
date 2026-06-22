@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Administração</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 8px 12px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background: #ddd;
+        }
+
+        .tab-btn.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .status-ok {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-pendente {
+            color: orange;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            text-align: center;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🏆 Administração de Resultados</h1>
+
+    <div id="grupo-tabs" class="abas-grupos"></div>
+
+    <table class="ranking">
+
+        <thead>
+
+            <tr>
+                <th>Status</th>
+                <th>Jogo</th>
+                <th>Resultado Oficial</th>
+            </tr>
+
+        </thead>
+
+        <tbody id="admin-body"></tbody>
+
+    </table>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/admin.js"></script>
+
+</body>
+</html>

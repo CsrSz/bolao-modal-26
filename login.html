@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Bolão Modal 2026</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    
+    <div class="alinha-vertical-login">	
+        
+        <div class="container">
+            <h1>🏆 Bolão Modal 2026</h1>
+            <h2>Login</h2>
+            
+            <form onsubmit="entrar(event)">
+                
+                <input id="nome" type="text" placeholder="Nome" class="campo" required>
+                <br><br>
+                
+                <input id="senha" type="password" placeholder="Senha" class="campo" required>
+                <br><br>
+                
+                <button type="submit" class="btn">
+                    Entrar
+                </button>
+                
+            </form>
+        </div>
+
+        <img src="assets/logo_modal.png" alt="Logo MODAL" class="logo-rodape">
+
+    </div>	
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/login.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,1 @@
+console.log("Bolão Modal 2026 iniciado!");
