@@ -15,9 +15,9 @@
     --cor-texto: #f8fafc;
     --cor-texto-mutado: #94a3b8;
     
-    /* Cores institucionais */
-    --cor-destaque: #0057b8;       /* O Azul vibrante do cabeçalho da FIFA */
-    --cor-laranja: #e67e22;         /* O Laranja da coluna dos Grupos */
+    /* Cores trazidas do seu Excel */
+    --cor-destaque: #0057b8; /* O Azul vibrante do cabeçalho da FIFA */
+    --cor-laranja: #e67e22;  /* O Laranja da coluna dos Grupos */
     --cor-verde-top: rgba(34, 197, 94, 0.2); /* Fundo translúcido para os líderes */
     
     --brilho-destaque: 0 0 15px rgba(0, 87, 184, 0.5);
@@ -33,17 +33,6 @@ body {
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
-}
-
-/* Ajuste global caso a página use o banner-inicial na tela toda */
-body:has(.banner-inicial) {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #0b0f19; /* Fundo escuro premium */
-    margin: 0;
-    padding: 20px;
 }
 
 /* ==========================================================================
@@ -73,10 +62,17 @@ h1, h2 {
 #tituloGrupo {
     text-align: center;
     margin: 20px 0;
-    background-color: rgba(230, 126, 34, 0.4); /* Laranja transparente */
+    
+    /* Laranja transparente (o 0.4 significa 40% de visibilidade) */
+    background-color: rgba(230, 126, 34, 0.4); 
+    
+    /* Efeito vidro (desfoque do que está atrás) */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    
+    /* Uma borda laranja bem suave para não perder a forma */
     border: 1px solid rgba(230, 126, 34, 0.3);
+    
     color: #ffffff;
     font-size: 1.4rem;
     font-weight: 800;
@@ -92,7 +88,7 @@ h1, h2 {
    3. BOTÕES E INPUTS (INTERATIVIDADE)
    ========================================================================== */
 .btn {
-    font-family: inherit;
+	font-family: inherit;
     background-color: var(--cor-destaque);
     color: #ffffff;
     border: none;
@@ -187,6 +183,7 @@ h1, h2 {
     transform: translateY(-2px);
 }
 
+/* Sobrescrevendo a aba ativa para usar o Laranja do Excel */
 .aba.ativa {
     background: var(--cor-laranja);
     border-color: var(--cor-laranja);
@@ -194,7 +191,7 @@ h1, h2 {
 }
 
 /* ==========================================================================
-   5. TABELAS (JOGOS E RANKING) + COMPORTAMENTO GRID E TV
+   5. TABELAS (JOGOS E RANKING) + ROLAGEM MÓVEL E ALINHAMENTO TV
    ========================================================================== */
 .tabela-responsiva {
     width: 100%;
@@ -212,8 +209,10 @@ h1, h2 {
     object-fit: contain; 
     flex-shrink: 0;
     filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.4));
+    /* Margem removida, pois o CSS Grid agora cuida do espaçamento! */
 }
 
+/* 1. ESTRUTURA RÍGIDA DA TABELA */
 .ranking {
     width: 100%;
     border-collapse: collapse;
@@ -222,17 +221,19 @@ h1, h2 {
     table-layout: fixed; 
 }
 
-/* Configurações de proporção rígida das colunas */
-.ranking th:nth-child(1) { width: 12%; }
-.ranking th:nth-child(2) { width: 8%; }
-.ranking th:nth-child(3) { width: 16%; }
-.ranking th:nth-child(4) { width: 22%; }
-.ranking th:nth-child(5) { width: 20%; }
-.ranking th:nth-child(6) { width: 22%; }
+/* Definindo o espaço exato de cada coluna no cabeçalho */
+.ranking th:nth-child(1) { width: 12%; } /* Data */
+.ranking th:nth-child(2) { width: 8%; }  /* Hora */
+.ranking th:nth-child(3) { width: 16%; } /* Estádio */
+.ranking th:nth-child(4) { width: 22%; } /* Mandante */
+.ranking th:nth-child(5) { width: 20%; } /* Placar */
+.ranking th:nth-child(6) { width: 22%; } /* Visitante */
 
-/* Grid para os alinhamentos dos escudos */
+/* 2. A MÁGICA DO GRID: ALINHAMENTO MILIMÉTRICO DOS ESCUDOS E TEXTOS */
+
 .time-mandante {
     display: grid;
+    /* Trava 32px na esquerda pro escudo, libera o resto na direita pro texto */
     grid-template-columns: 32px 1fr; 
     align-items: center;
     gap: 12px;
@@ -241,26 +242,29 @@ h1, h2 {
 
 .time-visitante {
     display: grid;
+    /* Libera o espaço na esquerda pro texto, trava 32px na direita pro escudo */
     grid-template-columns: 1fr 32px; 
     align-items: center;
     gap: 12px;
     padding-left: 5px;
 }
 
+/* 3. COMPORTAMENTO DOS NOMES (Colados perto do placar) */
 .time-mandante span {
-    text-align: right;
+    text-align: right; /* Empurra o texto para perto do placar */
     white-space: normal; 
     line-height: 1.2;
     overflow-wrap: break-word; 
 }
 
 .time-visitante span {
-    text-align: left;
+    text-align: left; /* Empurra o texto para perto do placar */
     white-space: normal; 
     line-height: 1.2;
     overflow-wrap: break-word;
 }
 
+/* 4. A ÂNCORA DO PLACAR */
 td.cell-placar {
     display: flex;
     align-items: center;
@@ -269,7 +273,7 @@ td.cell-placar {
     width: 100%;
 }
 
-/* Acabamento de bordas da tabela */
+/* --- 5. BORDAS E ESTILOS GERAIS (A MÁGICA DA LINHA CONTÍNUA) --- */
 .ranking tr:first-child th:first-child { border-top-left-radius: 10px; }
 .ranking tr:first-child th:last-child { border-top-right-radius: 10px; }
 .ranking tr:last-child td:first-child { border-bottom-left-radius: 10px; }
@@ -287,6 +291,7 @@ td.cell-placar {
     border-bottom: 2px solid rgba(59, 130, 246, 0.3);
 }
 
+/* AQUI ESTÁ O SEGREDO: Pintamos a linha na TR inteira e removemos da TD */
 .ranking tr {
     border-bottom: var(--borda-suave);
 }
@@ -296,7 +301,7 @@ td.cell-placar {
     text-align: center;
     color: var(--cor-texto);
     vertical-align: middle;
-    border-bottom: none;
+    border-bottom: none; /* Removido para acabar com o aspecto quebrado */
 }
 
 .ranking td:nth-child(3) {
@@ -323,6 +328,7 @@ td.cell-placar {
     font-weight: 600;
 }
 
+
 /* ==========================================================================
    6. STATUS VISUAL (PAINEL ADMIN)
    ========================================================================== */
@@ -339,161 +345,7 @@ td.cell-placar {
 }
 
 /* ==========================================================================
-   7. LOGOTIPO DA EMPRESA (RODAPÉ)
-   ========================================================================== */
-.logo-rodape {
-    display: block;
-    margin: 20px auto;
-    max-width: 150px;
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
-}
-
-.logo-rodape:hover {
-    opacity: 1;
-}
-
-/* ==========================================================================
-   8. CABEÇALHOS INTERNOS COM HISTÓRICO PADRÃO (.header-campeonato)
-   ========================================================================== */
-.header-campeonato {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 30px;
-    border-bottom: var(--borda-suave);
-    padding-bottom: 15px;
-}
-
-.logo-campeonato-fifa {
-    max-height: 70px;
-    width: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4)); 
-}
-
-.titulos-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-h1.titulo-principal {
-    margin-bottom: 5px !important;
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: #ffffff;
-}
-
-.subtitulo-ano {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--cor-destaque);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
-}
-
-/* ==========================================================================
-   9. BANNERS PREMIUM EXTERNOS (INDEX E MEUS PALPITES) - DESIGN ENCAIXADO
-   ========================================================================== */
-
-/* Tela Inicial (Quadro Principal do index) e Cabeçalho de Palpites */
-.banner-inicial, 
-.header-palpites {
-    width: 100%;
-    max-width: 1000px;
-    height: 230px; /* Altura proporcional calibrada para a imagem panorama */
-    margin: 0 auto 30px auto;
-    
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
-    
-    border-radius: 20px; 
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-
-    /* O Encaixe perfeito da Imagem */
-    background-image: url('../assets/new-logo-2026-azul.png'); 
-    background-size: 100% 100%; /* Fixa mascotes e taça nas quinas sem cortes */
-    background-position: center;
-    background-repeat: no-repeat;
-    
-    position: relative;
-    overflow: hidden;
-    box-sizing: border-box;
-}
-
-/* Ajustes de sobreposição de textos dentro dos banners premium */
-.titulos-banner,
-.header-palpites h1,
-.header-palpites p {
-    position: relative;
-    z-index: 2;
-    max-width: 450px;
-}
-
-.banner-inicial .titulo-principal,
-.header-palpites h1 {
-    font-size: 2.4rem;
-    color: #ffffff !important;
-    font-weight: 800;
-    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8) !important;
-    margin-bottom: 5px;
-}
-
-.banner-inicial .subtitulo-boas-vindas,
-.header-palpites p {
-    font-size: 1.2rem;
-    color: #ffffff !important;
-    font-weight: 500;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8) !important;
-    margin-top: 0;
-    margin-bottom: 15px;
-}
-
-/* Botões integrados aos banners premium (Index e Sair) */
-.btn-acessar,
-.header-palpites .btn-sair, 
-.header-palpites button,
-.header-palpites a[href*="logout"] {
-    display: inline-block;
-    background-color: #004b9b !important; /* Azul escuro idêntico ao botão da imagem */
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    padding: 12px 45px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-radius: 12px;
-    text-decoration: none;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-/* Redução do padding para o botão Sair ficar mais discreto */
-.header-palpites .btn-sair, 
-.header-palpites button {
-    padding: 8px 30px;
-    font-size: 1rem;
-    border-radius: 10px;
-}
-
-.btn-acessar:hover,
-.header-palpites .btn-sair:hover,
-.header-palpites button:hover {
-    background-color: #0057b8 !important; /* Brilha no azul FIFA */
-    box-shadow: 0 0 25px rgba(0, 75, 155, 0.6);
-    transform: scale(1.02);
-}
-
-/* ==========================================================================
-   10. MEDIA QUERIES (RESPONSIVIDADE GERAL E CELULARES)
+   7. RESPONSIVIDADE (OTIMIZAÇÃO COMPLETA PARA CELULARES)
    ========================================================================== */
 @media (max-width: 768px) {
     body {
@@ -505,7 +357,7 @@ h1.titulo-principal {
         border-radius: 14px;
     }
 
-    h1, h2, .banner-inicial .titulo-principal, .header-palpites h1 {
+    h1, h2 {
         font-size: 1.6rem;
     }
 
@@ -513,19 +365,20 @@ h1.titulo-principal {
         font-size: 1.2rem;
     }
 
+    /* Ajuste de Inputs e Botões para toque em telas móveis */
     .campo {
         max-width: 100%;
-        font-size: 16px; /* Evita zoom involuntário no iOS */
+        font-size: 16px; /* Impede zoom forçado indesejado no iOS */
         padding: 14px;
     }
 
-    .btn, .btn-acessar, .header-palpites .btn-sair, .header-palpites button {
-        width: 100%;
+    .btn {
+        width: 100%; /* Botões passam a ocupar largura total para clique fácil */
         padding: 14px;
         font-size: 1rem;
-        text-align: center;
     }
 
+    /* Ajuste nas abas de grupos para não esmagar em telas estreitas */
     .abas-grupos {
         gap: 6px;
     }
@@ -533,10 +386,11 @@ h1.titulo-principal {
     .aba {
         padding: 8px 14px;
         font-size: 0.8rem;
-        flex-grow: 1;
+        flex-grow: 1; /* Distribui os botões proporcionalmente na largura disponível */
         text-align: center;
     }
 
+    /* Redução de espaçamentos internos da tabela para visualização em telas pequenas */
     .ranking th {
         padding: 10px 6px;
         font-size: 0.75em;
@@ -552,29 +406,189 @@ h1.titulo-principal {
         padding: 6px;
         font-size: 1rem;
     }
+}
 
-    /* Comportamentos responsivos dos cabeçalhos e banners */
+/* ==========================================================================
+   8. IMAGEM LOGOTIPO MODAL
+   ========================================================================== */
+.logo-rodape {
+    display: block;
+    margin: 20px auto; /* Centraliza e dá um respiro de 20px do quadro de cima */
+    max-width: 150px; /* Ajuste este valor se quiser o logo maior ou menor */
+    opacity: 0.7; /* Deixa o logo levemente transparente para manter a elegância do tema escuro */
+    transition: opacity 0.3s ease;
+}
+
+.logo-rodape:hover {
+    opacity: 1; /* Fica 100% visível ao passar o mouse */
+}
+
+
+/* ==========================================================================
+   9. ADICIONAR NA SESSÃO 2 DO CSS (OU NO FINAL DO ARQUIVO)
+   ========================================================================== */
+
+/* Container Flexível do Cabeçalho Integrado */
+.header-campeonato {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centraliza tudo no container */
+    gap: 20px; /* Espaço entre a logo e o texto */
+    margin-bottom: 30px; /* Respiro para o conteúdo abaixo */
+    border-bottom: var(--borda-suave); /* Uma linha suave para dividir */
+    padding-bottom: 15px;
+}
+
+/* Tamanho e Brilho da Imagem da Logo Transparentizada */
+.logo-campeonato-fifa {
+    max-height: 70px; /* Ajuste este tamanho se quiser a logo maior ou menor */
+    width: auto;
+    object-fit: contain;
+    /* Aplica o efeito "Glow" que usamos nos escudos, para destacar no fundo escuro */
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4)); 
+}
+
+/* Container dos Títulos (Para alinhar h1 e span) */
+.titulos-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza os textos */
+}
+
+/* Ajuste específico para o h1 principal dentro do cabeçalho */
+h1.titulo-principal {
+    margin-bottom: 5px !important; /* Diminui o espaçamento para o subtitulo */
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+/* O NOVO TEXTO DO ANO DE 2026 */
+.subtitulo-ano {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--cor-destaque); /* Usa o azul vibrante do sistema */
+    text-transform: uppercase;
+    letter-spacing: 2px; /* Dá um ar mais premium */
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.3); /* Brilho suave */
+}
+
+/* Ajuste responsivo para celulares (para não esmagar) */
+@media (max-width: 768px) {
     .header-campeonato {
-        flex-direction: column;
+        flex-direction: column; /* Empilha a imagem acima do texto no celular */
         gap: 10px;
     }
-
+    
     h1.titulo-principal {
         font-size: 1.5rem;
     }
-
+    
     .logo-campeonato-fifa {
         max-height: 50px;
     }
+}
 
-    .banner-inicial, .header-palpites {
+/* ==========================================================================
+   ESTILIZAÇÃO PREMIUM DA TELA INICIAL (BANNER FIFA 2026 PROPORCIONAL)
+   ========================================================================== */
+
+/* Configura o fundo da tela inteira como o tema escuro do sistema */
+body:has(.banner-inicial) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #0b0f19; /* Fundo escuro premium */
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* O Quadro Centralizado com Encaixe Perfeito da Imagem */
+.banner-inicial {
+    width: 100%;
+    max-width: 1000px;    /* Mesma largura padrão do seu container */
+    height: 250px;        /* Reduzido de 400px para 300px para encaixar a proporção horizontal perfeita */
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    
+    /* Cantos arredondados e acabamento idêntico ao restante do seu sistema */
+    border-radius: 20px; 
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+
+    /* O SEGREDO DO ENCAIXE AQUI */
+    background-image: url('../assets/new-logo-2026-azul.png'); 
+    background-size: 100% 100%;       /* Força a imagem inteira a se moldar milimetricamente dentro do retângulo */
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Garante que o texto e botão flutuem perfeitamente por cima do azul */
+.titulos-banner {
+    position: relative;
+    z-index: 2;
+    max-width: 450px; /* Segura o texto centralizado sem invadir o troféu e os mascotes */
+}
+
+/* Título do seu Bolão */
+.titulo-principal {
+    font-size: 2.4rem;
+    color: #ffffff;
+    font-weight: 800;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8); /* Sombra forte para o texto "saltar" da imagem */
+    margin-bottom: 5px;
+}
+
+/* Subtítulo */
+.subtitulo-boas-vindas {
+    font-size: 1.2rem;
+    color: #ffffff;
+    font-weight: 500;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+/* Botão Customizado igual ao da sua foto */
+.btn-acessar {
+    display: inline-block;
+    background-color: #004b9b !important; /* O azul marinho idêntico ao botão da imagem */
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 12px 45px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s ease;
+}
+
+/* Efeito Hover do botão */
+.btn-acessar:hover {
+    background-color: #0057b8 !important; /* Acende para o azul FIFA ao passar o mouse */
+    box-shadow: 0 0 25px rgba(0, 75, 155, 0.6);
+    transform: scale(1.02);
+}
+
+/* Ajuste responsivo para celulares */
+@media (max-width: 768px) {
+    .banner-inicial {
         height: auto;
         min-height: 200px;
-        background-size: cover; /* No mobile, cover evita distorção excessiva */
-        border-radius: 14px;
+        background-size: cover; /* No celular o cover se comporta melhor */
     }
-
-    .banner-inicial .subtitulo-boas-vindas, .header-palpites p {
-        font-size: 0.95rem;
-    }
+    .titulo-principal { font-size: 1.6rem; }
+    .subtitulo-boas-vindas { font-size: 0.95rem; }
 }

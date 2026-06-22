@@ -2,80 +2,67 @@
 <html lang="pt-BR">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Meus Palpites</title>
-
-<link rel="stylesheet" href="css/style.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Palpites</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-<h1>⚽ Meus Palpites</h1>
-<p id="usuario"></p>
+        <header class="header-palpites">
+            <h1>⚽ Meus Palpites</h1>
+            <p id="usuario"></p>
+            <button onclick="sair()" class="btn-sair">Sair</button>
+        </header>
 
-<button
-onclick="sair()"
-class="btn">
+        <br>
 
-Sair
+        <div class="abas-grupos">
+            <button class="aba ativa" data-grupo="A">⚽ A</button>
+            <button class="aba" data-grupo="B">⚽ B</button>
+            <button class="aba" data-grupo="C">⚽ C</button>
+            <button class="aba" data-grupo="D">⚽ D</button>
+            <button class="aba" data-grupo="E">⚽ E</button>
+            <button class="aba" data-grupo="F">⚽ F</button>
+            <button class="aba" data-grupo="G">⚽ G</button>
+            <button class="aba" data-grupo="H">⚽ H</button>
+            <button class="aba" data-grupo="I">⚽ I</button>
+            <button class="aba" data-grupo="J">⚽ J</button>
+            <button class="aba" data-grupo="K">⚽ K</button>
+            <button class="aba" data-grupo="L">⚽ L</button>
+        </div>
 
-</button>
+        <h2 id="tituloGrupo">🏆 Grupo A</h2>
 
-<br><br>
+        <br>
 
-<div class="abas-grupos">
+        <table class="ranking">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Estádio</th>    
+                    <th>Mandante</th>
+                    <th colspan="3">Palpite</th>
+                    <th>Visitante</th>
+                </tr>
+            </thead>
+            <tbody id="jogos-body">
+                </tbody>
+        </table>
 
-		<button class="aba ativa" data-grupo="A">⚽ A</button>
-		<button class="aba" data-grupo="B">⚽ B</button>
-		<button class="aba" data-grupo="C">⚽ C</button>
-		<button class="aba" data-grupo="D">⚽ D</button>
-		<button class="aba" data-grupo="E">⚽ E</button>
-		<button class="aba" data-grupo="F">⚽ F</button>
-		<button class="aba" data-grupo="G">⚽ G</button>
-		<button class="aba" data-grupo="H">⚽ H</button>
-		<button class="aba" data-grupo="I">⚽ I</button>
-		<button class="aba" data-grupo="J">⚽ J</button>
-		<button class="aba" data-grupo="K">⚽ K</button>
-		<button class="aba" data-grupo="L">⚽ L</button>
+        <br>
 
-</div>
+        <a href="ranking.html" class="btn">Ranking</a>
 
-		<h2 id="tituloGrupo">🏆 Grupo A</h2>
+    </div>
 
-<br>
-
-<table class="ranking">
-
-<tr>
-    <th>Data</th>
-    <th>Hora</th>
-    <th>Estádio</th>	
-    <th>Mandante</th>
-    <th colspan="3">Palpite</th>
-    <th>Visitante</th>
-</tr>
-
-<tbody id="jogos-body">
-</tbody>
-
-</table>
-
-<br>
-
-<a href="ranking.html" class="btn">
-Ranking
-</a>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase.js"></script>
-<script src="js/palpites.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/palpites.js"></script>
 
 </body>
 </html>
