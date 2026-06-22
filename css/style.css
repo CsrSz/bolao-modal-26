@@ -489,4 +489,106 @@ h1.titulo-principal {
     }
 }
 
-/* Forçando a Vercel a atualizar */
+/* ==========================================================================
+   ESTILIZAÇÃO PREMIUM DA TELA INICIAL (BANNER FIFA 2026 PROPORCIONAL)
+   ========================================================================== */
+
+/* Configura o fundo da tela inteira como o tema escuro do sistema */
+body:has(.banner-inicial) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #0b0f19; /* Fundo escuro premium */
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* O Quadro Centralizado com Encaixe Perfeito da Imagem */
+.banner-inicial {
+    width: 100%;
+    max-width: 1000px;    /* Mesma largura padrão do seu container */
+    height: 250px;        /* Reduzido de 400px para 300px para encaixar a proporção horizontal perfeita */
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    
+    /* Cantos arredondados e acabamento idêntico ao restante do seu sistema */
+    border-radius: 20px; 
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+
+    /* O SEGREDO DO ENCAIXE AQUI */
+    background-image: url('../assets/new-logo-2026-azul.png'); 
+    background-size: 100% 100%;       /* Força a imagem inteira a se moldar milimetricamente dentro do retângulo */
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Garante que o texto e botão flutuem perfeitamente por cima do azul */
+.titulos-banner {
+    position: relative;
+    z-index: 2;
+    max-width: 450px; /* Segura o texto centralizado sem invadir o troféu e os mascotes */
+}
+
+/* Título do seu Bolão */
+.titulo-principal {
+    font-size: 2.4rem;
+    color: #ffffff;
+    font-weight: 800;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8); /* Sombra forte para o texto "saltar" da imagem */
+    margin-bottom: 5px;
+}
+
+/* Subtítulo */
+.subtitulo-boas-vindas {
+    font-size: 1.2rem;
+    color: #ffffff;
+    font-weight: 500;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+/* Botão Customizado igual ao da sua foto */
+.btn-acessar {
+    display: inline-block;
+    background-color: #004b9b !important; /* O azul marinho idêntico ao botão da imagem */
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 12px 45px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s ease;
+}
+
+/* Efeito Hover do botão */
+.btn-acessar:hover {
+    background-color: #0057b8 !important; /* Acende para o azul FIFA ao passar o mouse */
+    box-shadow: 0 0 25px rgba(0, 75, 155, 0.6);
+    transform: scale(1.02);
+}
+
+/* Ajuste responsivo para celulares */
+@media (max-width: 768px) {
+    .banner-inicial {
+        height: auto;
+        min-height: 200px;
+        background-size: cover; /* No celular o cover se comporta melhor */
+    }
+    .titulo-principal { font-size: 1.6rem; }
+    .subtitulo-boas-vindas { font-size: 0.95rem; }
+}
