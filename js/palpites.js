@@ -30,27 +30,69 @@ async function carregarJogos() {
     const tbody = document.getElementById('jogos-body');
     tbody.innerHTML = '';
 
-    jogos.forEach(jogo => {
+    const jogosFiltrados = jogos
+        .filter(jogo => jogo.grupo === grupoSelecionado)
+        .filter(jogo => jogoDisponivelParaPalpite(jogo))
+        .sort((a, b) => {
 
-        if (jogo.grupo !== grupoSelecionado) {
-            return;
-        }
+            const ordemA = a.ordem ?? a.id;
+            const ordemB = b.ordem ?? b.id;
 
-        const palpiteSalvo = palpites?.find(p => p.jogo_id === jogo.id) || {};
-        const dataJogo = new Date(`${jogo.data}T${jogo.hora}:00`);
-        const bloqueado = new Date() >= dataJogo;
-        const [ano, mes, dia] = jogo.data.split('-');
-        const dataFormatada = `${dia}/${mes}/${ano.slice(2)}`;
+            return ordemA - ordemB;
 
-        // AQUI ESTÁ A MÁGICA DO ESPELHAMENTO DE TV!
+        });
+
+    if (jogosFiltrados.length === 0) {
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center;">
+                    Nenhum jogo disponível para esta fase.
+                </td>
+            </tr>
+        `;
+
+        configurarEventos();
+        return;
+    }
+
+    jogosFiltrados.forEach(jogo => {
+
+        const palpiteSalvo =
+            palpites?.find(p => Number(p.jogo_id) === Number(jogo.id)) || {};
+
+        const dataJogo =
+            new Date(`${jogo.data}T${jogo.hora}:00`);
+
+        const bloqueado =
+            new Date() >= dataJogo;
+
+        const [ano, mes, dia] =
+            jogo.data.split('-');
+
+        const dataFormatada =
+            `${dia}/${mes}/${ano.slice(2)}`;
+
         tbody.innerHTML += `
             <tr>
                 <td>📆 ${dataFormatada}</td>
-                <td>⌚ ${jogo.hora.replace(':00', 'h')}</td>
-                <td>🏟️ ${jogo.local || ''}</td>
+                <td>⌚ ${formatarHora(jogo.hora)}</td>
+                <td>
+                    🏟️ ${jogo.local || ''}
+                    ${
+                        grupoSelecionado === 'MATA'
+                            ? `<br><small>${formatarFase(jogo.fase)}</small>`
+                            : ''
+                    }
+                </td>
 
                 <td class="time-mandante">
-                    <img src="assets/escudos/${formatarNomeTime(jogo.mandante)}.png" class="escudo" alt="Escudo ${jogo.mandante}" onerror="this.style.display='none'">
+                    <img
+                        src="assets/escudos/${formatarNomeTime(jogo.mandante)}.png"
+                        class="escudo"
+                        alt="Escudo ${jogo.mandante}"
+                        onerror="this.style.display='none'"
+                    >
                     <span>${jogo.mandante}</span>
                 </td>
 
@@ -61,7 +103,8 @@ async function carregarJogos() {
                         class="placar mandante"
                         data-id="${jogo.id}"
                         value="${palpiteSalvo.mandante ?? ''}"
-                        ${bloqueado ? 'disabled' : ''}>
+                        ${bloqueado ? 'disabled' : ''}
+                    >
                 </td>
 
                 <td>x</td>
@@ -73,12 +116,18 @@ async function carregarJogos() {
                         class="placar visitante"
                         data-id="${jogo.id}"
                         value="${palpiteSalvo.visitante ?? ''}"
-                        ${bloqueado ? 'disabled' : ''}>
+                        ${bloqueado ? 'disabled' : ''}
+                    >
                 </td>
 
                 <td class="time-visitante">
                     <span>${jogo.visitante}</span>
-                    <img src="assets/escudos/${formatarNomeTime(jogo.visitante)}.png" class="escudo" alt="Escudo ${jogo.visitante}" onerror="this.style.display='none'">
+                    <img
+                        src="assets/escudos/${formatarNomeTime(jogo.visitante)}.png"
+                        class="escudo"
+                        alt="Escudo ${jogo.visitante}"
+                        onerror="this.style.display='none'"
+                    >
                 </td>
             </tr>
         `;
@@ -87,23 +136,68 @@ async function carregarJogos() {
     configurarEventos();
 }
 
+function jogoDisponivelParaPalpite(jogo) {
+
+    if (jogo.grupo !== 'MATA') {
+        return true;
+    }
+
+    return (
+        timeDefinido(jogo.mandante) &&
+        timeDefinido(jogo.visitante)
+    );
+
+}
+
+function timeDefinido(nome) {
+
+    if (!nome) {
+        return false;
+    }
+
+    if (nome === 'A definir') {
+        return false;
+    }
+
+    if (nome.includes('º')) {
+        return false;
+    }
+
+    if (nome.includes('/')) {
+        return false;
+    }
+
+    return true;
+}
+
 function configurarEventos() {
+
     const inputs = document.querySelectorAll('.placar');
+
     inputs.forEach(input => {
         input.addEventListener('change', salvarPalpite);
     });
+
 }
 
 async function salvarPalpite() {
+
     const jogoId = Number(this.dataset.id);
-    const mandante = document.querySelector(`.mandante[data-id="${jogoId}"]`).value;
-    const visitante = document.querySelector(`.visitante[data-id="${jogoId}"]`).value;
+
+    const mandante = document.querySelector(
+        `.mandante[data-id="${jogoId}"]`
+    ).value;
+
+    const visitante = document.querySelector(
+        `.visitante[data-id="${jogoId}"]`
+    ).value;
 
     if (mandante === '' || visitante === '') {
         return;
     }
 
-    const participanteId = Number(localStorage.getItem('usuarioId'));
+    const participanteId =
+        Number(localStorage.getItem('usuarioId'));
 
     const { error } = await supabaseClient
         .from('palpites')
@@ -126,34 +220,145 @@ async function salvarPalpite() {
     }
 
     console.log(`Palpite do jogo ${jogoId} salvo no Supabase`);
+
 }
 
-document.querySelectorAll('.aba').forEach(botao => {
-    botao.addEventListener('click', () => {
-        document.querySelectorAll('.aba').forEach(b => b.classList.remove('ativa'));
-        botao.classList.add('ativa');
-        grupoSelecionado = botao.dataset.grupo;
-        document.getElementById('tituloGrupo').textContent = `🏆 Grupo ${grupoSelecionado}`;
-        carregarJogos();
+function configurarAbas() {
+
+    garantirAbaMataMata();
+
+    document.querySelectorAll('.aba').forEach(botao => {
+
+        botao.onclick = () => {
+
+            document.querySelectorAll('.aba')
+                .forEach(b => b.classList.remove('ativa'));
+
+            botao.classList.add('ativa');
+
+            grupoSelecionado = botao.dataset.grupo;
+
+            atualizarTituloGrupo();
+
+            carregarJogos();
+
+        };
+
     });
-});
 
-document.getElementById('tituloGrupo').textContent = `🏆 Grupo ${grupoSelecionado}`;
-carregarJogos();
+}
 
-const usuario = localStorage.getItem('usuarioLogado');
-if (usuario) {
-    document.getElementById('usuario').innerHTML = `Olá, ${usuario} 👋`;
+function garantirAbaMataMata() {
+
+    const abaExistente =
+        document.querySelector('.aba[data-grupo="MATA"]');
+
+    if (abaExistente) {
+        return;
+    }
+
+    const primeiraAba =
+        document.querySelector('.aba');
+
+    if (!primeiraAba || !primeiraAba.parentElement) {
+        return;
+    }
+
+    const botao = document.createElement('button');
+
+    botao.className = 'aba';
+    botao.dataset.grupo = 'MATA';
+    botao.textContent = 'Mata-Mata';
+
+    primeiraAba.parentElement.appendChild(botao);
+
+}
+
+function atualizarTituloGrupo() {
+
+    const titulo =
+        document.getElementById('tituloGrupo');
+
+    if (!titulo) {
+        return;
+    }
+
+    titulo.textContent =
+        grupoSelecionado === 'MATA'
+            ? '🏆 Mata-Mata'
+            : `🏆 Grupo ${grupoSelecionado}`;
+
+}
+
+function formatarHora(hora) {
+
+    if (!hora) {
+        return '';
+    }
+
+    const partes = hora.split(':');
+
+    const horas = partes[0];
+    const minutos = partes[1] ?? '00';
+
+    return minutos === '00'
+        ? `${horas}h`
+        : `${horas}h${minutos}`;
+
+}
+
+function formatarFase(fase) {
+
+    const fases = {
+
+        '16AVOS': 'Seguda Fase',
+
+        'OITAVAS': 'Oitavas de Final',
+
+        'QUARTAS': 'Quartas de Final',
+
+        'SEMIFINAL': 'Semifinal',
+
+        'TERCEIRO': 'Disputa do 3º Lugar',
+
+        'FINAL': 'Final'
+
+    };
+
+    return fases[fase] || fase || '';
+
+}
+
+function formatarNomeTime(nome) {
+
+    if (!nome) {
+        return '';
+    }
+
+    return nome
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, '-');
+
 }
 
 function sair() {
+
     localStorage.removeItem('usuarioLogado');
     window.location.href = 'login.html';
+
 }
 
-// Função para gerar o nome do arquivo da imagem automaticamente
-function formatarNomeTime(nome) {
-    return nome.toLowerCase()
-               .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove os acentos
-               .replace(/\s+/g, '-'); // Troca os espaços por traços
+configurarAbas();
+atualizarTituloGrupo();
+carregarJogos();
+
+const usuario = localStorage.getItem('usuarioLogado');
+
+if (usuario) {
+
+    document.getElementById('usuario').innerHTML =
+        `Olá, ${usuario} 👋`;
+
 }

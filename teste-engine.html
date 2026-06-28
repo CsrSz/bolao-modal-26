@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste Engine</title>
+</head>
+<body>
+
+<h1>Teste da Engine</h1>
+<p>Abra o console do navegador.</p>
+
+<script src="js/supabase.js"></script>
+
+<script type="module">
+
+    import { gerarCompeticao } from './js/engine/competicao.js';
+
+    async function testarEngine() {
+
+        const { data: jogos, error: erroJogos } = await supabase
+            .from('jogos')
+            .select('*')
+            .order('id');
+
+        if (erroJogos) {
+            console.error('Erro jogos:', erroJogos);
+            return;
+        }
+
+        const { data: resultados, error: erroResultados } = await supabase
+            .from('resultados')
+            .select('*');
+
+        if (erroResultados) {
+            console.error('Erro resultados:', erroResultados);
+            return;
+        }
+
+        const competicao = gerarCompeticao(jogos, resultados);
+
+        console.log('COMPETIÇÃO:', competicao);
+        console.table(competicao.classificacao.grupos.A);
+        console.log('Primeiros:', competicao.classificacao.classificados.primeiros);
+        console.log('Segundos:', competicao.classificacao.classificados.segundos);
+        console.log('Melhores terceiros:', competicao.classificacao.classificados.terceiros);
+
+    }
+
+    testarEngine();
+
+</script>
+
+</body>
+</html>

@@ -1,7 +1,48 @@
+const SENHA_ADMIN = 'Modal@2026';
+
 let jogos = [];
+let resultados = [];
 let grupoAtual = 'A';
+let gerarCompeticao = null;
+
+function validarAcessoAdmin() {
+
+    const acessoLiberado =
+        sessionStorage.getItem('adminLiberado') === 'SIM';
+
+    if (acessoLiberado) {
+        return true;
+    }
+
+    const senha = prompt('Informe a senha do Admin:');
+
+    if (senha === SENHA_ADMIN) {
+
+        sessionStorage.setItem('adminLiberado', 'SIM');
+
+        return true;
+
+    }
+
+    alert('Acesso negado');
+
+    window.location.href = 'index.html';
+
+    return false;
+
+}
+
+async function carregarEngine() {
+
+    const modulo = await import('./engine/competicao.js');
+
+    gerarCompeticao = modulo.gerarCompeticao;
+
+}
 
 async function carregarJogosAdmin() {
+
+    await carregarEngine();
 
     const { data, error } = await supabase
         .from('jogos')
@@ -15,8 +56,91 @@ async function carregarJogosAdmin() {
 
     jogos = data;
 
+    await carregarResultados();
+
+    await processarCompeticao();
+
     criarAbas();
     renderizarGrupo(grupoAtual);
+}
+
+async function carregarResultados() {
+
+    const { data, error } = await supabase
+        .from('resultados')
+        .select('*');
+
+    if (error) {
+        console.error('Erro ao carregar resultados:', error);
+        resultados = [];
+        return;
+    }
+
+    resultados = data;
+
+}
+
+async function processarCompeticao() {
+
+    if (!gerarCompeticao) {
+        return;
+    }
+
+    const competicao = gerarCompeticao(jogos, resultados);
+
+    if (
+        !competicao.atualizacoesJogos ||
+        competicao.atualizacoesJogos.length === 0
+    ) {
+        return;
+    }
+
+    await aplicarAtualizacoesJogos(
+        competicao.atualizacoesJogos
+    );
+
+}
+
+async function aplicarAtualizacoesJogos(atualizacoes) {
+
+    for (const jogo of atualizacoes) {
+
+        const { error } = await supabase
+            .from('jogos')
+            .update({
+                mandante: jogo.mandante,
+                visitante: jogo.visitante,
+                origem_mandante: jogo.origem_mandante,
+                origem_visitante: jogo.origem_visitante
+            })
+            .eq('id', jogo.id);
+
+        if (error) {
+            console.error(
+                `Erro ao atualizar jogo ${jogo.id}:`,
+                error
+            );
+            continue;
+        }
+
+        console.log(
+            `Jogo ${jogo.id} atualizado: ${jogo.mandante} x ${jogo.visitante}`
+        );
+
+    }
+
+    const { data, error } = await supabase
+        .from('jogos')
+        .select('*')
+        .order('id');
+
+    if (error) {
+        console.error('Erro ao recarregar jogos:', error);
+        return;
+    }
+
+    jogos = data;
+
 }
 
 function criarAbas() {
@@ -30,19 +154,20 @@ function criarAbas() {
 
         const botao = document.createElement('button');
 
-        // AJUSTE: Usando as classes 'aba' e 'ativa' do novo CSS
         botao.className =
             grupo === grupoAtual
                 ? 'aba ativa'
                 : 'aba';
 
-        botao.textContent = `Grupo ${grupo}`;
+        botao.textContent =
+            grupo === 'MATA'
+                ? 'Mata-mata'
+                : `Grupo ${grupo}`;
 
         botao.onclick = () => {
 
             grupoAtual = grupo;
 
-            // AJUSTE: Buscando os botões pela classe 'aba' e removendo a 'ativa'
             document.querySelectorAll('.aba')
                 .forEach(btn => btn.classList.remove('ativa'));
 
@@ -57,18 +182,12 @@ function criarAbas() {
 
 async function buscarResultado(jogoId) {
 
-    const { data, error } = await supabase
-        .from('resultados')
-        .select('*')
-        .eq('jogo_id', jogoId)
-        .maybeSingle();
+    const resultado = resultados.find(
+        r => Number(r.jogo_id) === Number(jogoId)
+    );
 
-    if (error) {
-        console.error('Erro ao buscar resultado:', error);
-        return null;
-    }
+    return resultado || null;
 
-    return data;
 }
 
 async function renderizarGrupo(grupo) {
@@ -76,7 +195,16 @@ async function renderizarGrupo(grupo) {
     const tbody = document.getElementById('admin-body');
     tbody.innerHTML = '';
 
-    const jogosGrupo = jogos.filter(jogo => jogo.grupo === grupo);
+    const jogosGrupo = jogos
+        .filter(jogo => jogo.grupo === grupo)
+        .sort((a, b) => {
+
+            const ordemA = a.ordem ?? a.id;
+            const ordemB = b.ordem ?? b.id;
+
+            return ordemA - ordemB;
+
+        });
 
     for (const jogo of jogosGrupo) {
 
@@ -84,9 +212,16 @@ async function renderizarGrupo(grupo) {
 
         const preenchido =
             resultado.mandante !== undefined &&
-            resultado.mandante !== '' &&
+            resultado.mandante !== null &&
             resultado.visitante !== undefined &&
-            resultado.visitante !== '';
+            resultado.visitante !== null;
+
+        const empate =
+            preenchido &&
+            Number(resultado.mandante) === Number(resultado.visitante);
+
+        const jogoMataMata =
+            jogo.grupo === 'MATA';
 
         tbody.innerHTML += `
             <tr>
@@ -105,6 +240,8 @@ async function renderizarGrupo(grupo) {
                     </strong>
                     <br>
                     ${jogo.data} às ${jogo.hora}
+                    <br>
+                    <small>${jogo.local ?? ''}</small>
                 </td>
 
                 <td>
@@ -127,6 +264,12 @@ async function renderizarGrupo(grupo) {
                         value="${resultado.visitante ?? ''}"
                     >
 
+                    ${
+                        jogoMataMata && empate
+                            ? montarSelectVencedor(jogo, resultado)
+                            : ''
+                    }
+
                 </td>
 
             </tr>
@@ -136,6 +279,34 @@ async function renderizarGrupo(grupo) {
     configurarEventos();
 }
 
+function montarSelectVencedor(jogo, resultado) {
+
+    return `
+        <br>
+        <select
+            class="vencedor"
+            data-id="${jogo.id}"
+        >
+            <option value="">Definir vencedor</option>
+
+            <option
+                value="MANDANTE"
+                ${resultado.vencedor === 'MANDANTE' ? 'selected' : ''}
+            >
+                ${jogo.mandante}
+            </option>
+
+            <option
+                value="VISITANTE"
+                ${resultado.vencedor === 'VISITANTE' ? 'selected' : ''}
+            >
+                ${jogo.visitante}
+            </option>
+        </select>
+    `;
+
+}
+
 function configurarEventos() {
 
     const inputs = document.querySelectorAll('.placar');
@@ -143,26 +314,84 @@ function configurarEventos() {
     inputs.forEach(input => {
         input.addEventListener('change', salvarResultado);
     });
+
+    const selects = document.querySelectorAll('.vencedor');
+
+    selects.forEach(select => {
+        select.addEventListener('change', salvarResultado);
+    });
 }
 
 async function salvarResultado() {
 
     const id = this.dataset.id;
 
-    const mandante = document.querySelector(
-        `.oficial-m[data-id="${id}"]`
-    ).value;
+    const jogo = jogos.find(
+        j => Number(j.id) === Number(id)
+    );
 
-    const visitante = document.querySelector(
+    const campoMandante = document.querySelector(
+        `.oficial-m[data-id="${id}"]`
+    );
+
+    const campoVisitante = document.querySelector(
         `.oficial-v[data-id="${id}"]`
-    ).value;
+    );
+
+    const mandante = campoMandante.value;
+    const visitante = campoVisitante.value;
+
+    const mandanteVazio = mandante === '';
+    const visitanteVazio = visitante === '';
+
+    if (mandanteVazio && visitanteVazio) {
+
+        await apagarResultado(id);
+
+        await carregarResultados();
+
+        await processarCompeticao();
+
+        renderizarGrupo(grupoAtual);
+
+        return;
+
+    }
+
+    if (mandanteVazio || visitanteVazio) {
+        return;
+    }
+
+    const placarMandante = Number(mandante);
+    const placarVisitante = Number(visitante);
+
+    let vencedor = null;
+
+    const jogoMataMata =
+        jogo && jogo.grupo === 'MATA';
+
+    const empate =
+        placarMandante === placarVisitante;
+
+    if (jogoMataMata && empate) {
+
+        const selectVencedor = document.querySelector(
+            `.vencedor[data-id="${id}"]`
+        );
+
+        vencedor = selectVencedor
+            ? selectVencedor.value || null
+            : null;
+
+    }
 
     const { error } = await supabase
         .from('resultados')
         .upsert({
             jogo_id: id,
-            mandante: mandante === '' ? null : Number(mandante),
-            visitante: visitante === '' ? null : Number(visitante)
+            mandante: placarMandante,
+            visitante: placarVisitante,
+            vencedor
         }, {
             onConflict: 'jogo_id'
         });
@@ -173,7 +402,36 @@ async function salvarResultado() {
         return;
     }
 
+    await carregarResultados();
+
+    await processarCompeticao();
+
     renderizarGrupo(grupoAtual);
 }
 
-carregarJogosAdmin();
+async function apagarResultado(jogoId) {
+
+    const { error } = await supabase
+        .from('resultados')
+        .delete()
+        .eq('jogo_id', jogoId);
+
+    if (error) {
+        console.error('Erro ao apagar resultado:', error);
+        alert('Erro ao apagar resultado');
+        return;
+    }
+
+    console.log(`Resultado do jogo ${jogoId} apagado`);
+
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    if (!validarAcessoAdmin()) {
+        return;
+    }
+
+    carregarJogosAdmin();
+
+});

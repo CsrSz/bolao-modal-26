@@ -91,8 +91,9 @@ h1, h2 {
 /* ==========================================================================
    3. BOTÕES E INPUTS (INTERATIVIDADE)
    ========================================================================== */
-.btn {
-    font-family: inherit;
+/* Força todas as abas, incluindo as criadas por JS, a usarem a Happy Monkey */
+button, .btn, .aba, .campo, .placar {
+    font-family: inherit !important;
     background-color: var(--cor-destaque);
     color: #ffffff;
     border: none;

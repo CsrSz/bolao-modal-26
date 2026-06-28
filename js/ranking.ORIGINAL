@@ -3,26 +3,12 @@ async function carregarRanking() {
     try {
 
         const { data, error } = await supabaseClient
-            .rpc('ranking_mata_mata');
+            .rpc('ranking');
 
         if (error) throw error;
 
         const tbody = document.getElementById('ranking-body');
         tbody.innerHTML = '';
-
-        if (!data || data.length === 0) {
-
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="3" style="text-align:center;">
-                        Nenhum participante encontrado.
-                    </td>
-                </tr>
-            `;
-
-            return;
-
-        }
 
         data.forEach((item, indice) => {
 
@@ -43,21 +29,7 @@ async function carregarRanking() {
 
     } catch (erro) {
 
-        console.error('Erro ao carregar ranking mata-mata:', erro);
-
-        const tbody = document.getElementById('ranking-body');
-
-        if (tbody) {
-
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="3" style="text-align:center;">
-                        Erro ao carregar ranking.
-                    </td>
-                </tr>
-            `;
-
-        }
+        console.error('Erro ao carregar ranking:', erro);
 
     }
 
