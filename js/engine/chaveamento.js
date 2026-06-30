@@ -1,6 +1,7 @@
 // =====================================================
 // ENGINE - CHAVEAMENTO
 // Copa do Mundo FIFA 2026
+// Bolão MODAL Web
 // =====================================================
 
 const MAPA_16_AVOS = [
@@ -10,7 +11,7 @@ const MAPA_16_AVOS = [
     { id: 76, mandante: 'Holanda', visitante: 'Marrocos' },
 
     { id: 77, mandante: 'Portugal', visitante: 'Croácia' },
-    { id: 78, mandante: 'Espanha', visitante: 'Áustria', origemVisitante: '2J' },
+    { id: 78, mandante: 'Espanha', visitante: 'Áustria' },
     { id: 79, mandante: 'Estados Unidos', visitante: 'Bósnia' },
     { id: 80, mandante: 'Bélgica', visitante: 'Senegal' },
 
@@ -21,22 +22,22 @@ const MAPA_16_AVOS = [
 
     { id: 85, mandante: 'Argentina', visitante: 'Cabo Verde' },
     { id: 86, mandante: 'Austrália', visitante: 'Egito' },
-    { id: 87, mandante: 'Suíça', visitante: 'Argélia', origemVisitante: '3E/F/G/I/J' },
+    { id: 87, mandante: 'Suíça', visitante: 'Argélia' },
     { id: 88, mandante: 'Colômbia', visitante: 'Gana' }
 ];
 
 const MAPA_PROXIMAS_FASES = {
 
     oitavas: [
-        { id: 89, origemMandante: 'V73', origemVisitante: 'V75' },
-        { id: 90, origemMandante: 'V74', origemVisitante: 'V77' },
-        { id: 91, origemMandante: 'V76', origemVisitante: 'V78' },
+        { id: 89, origemMandante: 'V73', origemVisitante: 'V74' },
+        { id: 90, origemMandante: 'V75', origemVisitante: 'V76' },
+        { id: 91, origemMandante: 'V77', origemVisitante: 'V78' },
         { id: 92, origemMandante: 'V79', origemVisitante: 'V80' },
 
-        { id: 93, origemMandante: 'V83', origemVisitante: 'V84' },
-        { id: 94, origemMandante: 'V81', origemVisitante: 'V82' },
-        { id: 95, origemMandante: 'V86', origemVisitante: 'V88' },
-        { id: 96, origemMandante: 'V85', origemVisitante: 'V87' }
+        { id: 93, origemMandante: 'V81', origemVisitante: 'V82' },
+        { id: 94, origemMandante: 'V83', origemVisitante: 'V84' },
+        { id: 95, origemMandante: 'V85', origemVisitante: 'V86' },
+        { id: 96, origemMandante: 'V87', origemVisitante: 'V88' }
     ],
 
     quartas: [
@@ -47,8 +48,8 @@ const MAPA_PROXIMAS_FASES = {
     ],
 
     semifinal: [
-        { id: 101, origemMandante: 'V97', origemVisitante: 'V98' },
-        { id: 102, origemMandante: 'V99', origemVisitante: 'V100' }
+        { id: 101, origemMandante: 'V97', origemVisitante: 'V99' },
+        { id: 102, origemMandante: 'V98', origemVisitante: 'V100' }
     ],
 
     terceiroLugar: [
@@ -66,29 +67,19 @@ export function gerarChaveamento() {
     const dezesseisAvos = MAPA_16_AVOS.map(jogo => {
 
         return {
-
             id: jogo.id,
-
             fase: '16AVOS',
-
             origemMandante: jogo.origemMandante || null,
-
             origemVisitante: jogo.origemVisitante || null,
-
             mandante: jogo.mandante,
-
             visitante: jogo.visitante,
-
             pendente: false,
-
             motivo: null
-
         };
 
     });
 
     return {
-
         dezesseisAvos,
 
         oitavas: montarFasePendente(
@@ -115,7 +106,6 @@ export function gerarChaveamento() {
             MAPA_PROXIMAS_FASES.final,
             'FINAL'
         )
-
     };
 
 }
@@ -125,23 +115,14 @@ function montarFasePendente(jogos, fase) {
     return jogos.map(jogo => {
 
         return {
-
             id: jogo.id,
-
             fase,
-
             origemMandante: jogo.origemMandante,
-
             origemVisitante: jogo.origemVisitante,
-
             mandante: 'A definir',
-
             visitante: 'A definir',
-
             pendente: true,
-
             motivo: `Depende de ${jogo.origemMandante} e ${jogo.origemVisitante}`
-
         };
 
     });
