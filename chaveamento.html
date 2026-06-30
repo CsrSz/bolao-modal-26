@@ -119,10 +119,10 @@
             text-align: center;
         }
 
-        .logo-modal {
+        .logo_modal {
             display: block;
-            width: 150px;
-            max-height: 70px;
+            width: 225px;
+            max-height: 105px;
             object-fit: contain;
             margin: 0 auto 14px;
             filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.35));
@@ -170,11 +170,11 @@
         }
 
         .chaveamento {
-            min-width: 1680px;
+            min-width: 1730px;
             height: 900px;
             display: grid;
             grid-template-columns:
-                190px
+                215px
                 132px
                 116px
                 104px
@@ -182,7 +182,7 @@
                 104px
                 116px
                 132px
-                190px;
+                215px;
             gap: 48px;
             align-items: stretch;
         }
@@ -300,7 +300,7 @@
         }
 
         .rodada-16 .time {
-            grid-template-columns: 24px 1fr 24px;
+            grid-template-columns: 24px 1fr 24px 24px;
         }
 
         .escudo-time {
@@ -326,6 +326,22 @@
             background: rgba(255, 255, 255, 0.12);
             border: 1px solid rgba(255, 216, 77, 0.25);
         }
+		
+		.penaltis {
+			min-width: 22px;
+			min-height: 18px;
+			display: grid;
+			place-items: center;
+			border-radius: 6px;
+			color: #ffffff;
+			font-size: 12px;
+			font-weight: 950;
+		}
+
+		.penaltis:not(:empty) {
+			background: rgba(255, 131, 0, 0.22);
+			border: 1px solid rgba(255, 131, 0, 0.55);
+		}
 
         .flag {
             width: 34px;
@@ -545,7 +561,7 @@
         </header>
 
         <section class="titulo-area">
-            <img class="logo-modal" src="./assets/logo-modal.png" alt="MODAL Marcas & Patentes" onerror="this.style.display='none'">
+            <img class="logo_modal" src="./assets/logo_modal.png" alt="MODAL Marcas & Patentes" onerror="this.style.display='none'">
 
             <h1>
                 Caminho
@@ -569,9 +585,11 @@
                             <span class="numero-jogo">Jogo 73</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/alemanha.png" alt="Alemanha"><span>Alemanha</span>1<span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/alemanha.png" alt="Alemanha"><span>Alemanha</span><span class="placar">1</span>
+						<span class="penaltis">3</span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/paraguai.png" alt="Paraguai"><span>Paraguai</span>1<span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/paraguai.png" alt="Paraguai"><span>Paraguai</span><span class="placar">1</span>
+						<span class="penaltis">4</span></div>
                     </article>
 
                     <article class="card-jogo linha-saida-direita" data-jogo="74">
@@ -579,9 +597,11 @@
                             <span class="numero-jogo">Jogo 74</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/franca.png" alt="França"><span>França</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/franca.png" alt="França"><span>França</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/suecia.png" alt="Suécia"><span>Suécia</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/suecia.png" alt="Suécia"><span>Suécia</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                     </article>
 
                     <article class="card-jogo linha-saida-direita" data-jogo="75">
@@ -589,9 +609,11 @@
                             <span class="numero-jogo">Jogo 75</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/africa-do-sul.png" alt="África do Sul"><span>África do Sul</span><span class="placar">0</span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/africa-do-sul.png" alt="África do Sul"><span>África do Sul</span><span class="placar">0</span>
+						<span class="penaltis"></span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/canada.png" alt="Canadá"><span>Canadá</span><span class="placar">1</span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/canada.png" alt="Canadá"><span>Canadá</span><span class="placar">1</span>
+						<span class="penaltis"></span></div>
                     </article>
 
                     <article class="card-jogo linha-saida-direita" data-jogo="76">
@@ -599,9 +621,11 @@
                             <span class="numero-jogo">Jogo 76</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/holanda.png" alt="Holanda"><span>Holanda</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/holanda.png" alt="Holanda"><span>Holanda</span><span class="placar">1</span>
+						<span class="penaltis">2</span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/marrocos.png" alt="Marrocos"><span>Marrocos</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/marrocos.png" alt="Marrocos"><span>Marrocos</span><span class="placar">1</span>
+						<span class="penaltis">3</span></div>
                     </article>
 
                     <article class="card-jogo linha-saida-direita" data-jogo="77">
@@ -609,9 +633,11 @@
                             <span class="numero-jogo">Jogo 77</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/portugal.png" alt="Portugal"><span>Portugal</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/portugal.png" alt="Portugal"><span>Portugal</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/croacia.png" alt="Croácia"><span>Croácia</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/croacia.png" alt="Croácia"><span>Croácia</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                     </article>
 
                     <article class="card-jogo linha-saida-direita" data-jogo="78">
@@ -619,9 +645,11 @@
                             <span class="numero-jogo">Jogo 78</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/espanha.png" alt="Espanha"><span>Espanha</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/espanha.png" alt="Espanha"><span>Espanha</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/austria.png" alt="Áustria"><span>Áustria</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/austria.png" alt="Áustria"><span>Áustria</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                     </article>
 
                     <article class="card-jogo linha-saida-direita" data-jogo="79">
@@ -629,9 +657,11 @@
                             <span class="numero-jogo">Jogo 79</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/estados-unidos.png" alt="Estados Unidos"><span>EUA</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/estados-unidos.png" alt="Estados Unidos"><span>EUA</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/bosnia.png" alt="Bósnia"><span>Bósnia</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/bosnia.png" alt="Bósnia"><span>Bósnia</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                     </article>
 
                     <article class="card-jogo linha-saida-direita" data-jogo="80">
@@ -639,9 +669,11 @@
                             <span class="numero-jogo">Jogo 80</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/belgica.png" alt="Bélgica"><span>Bélgica</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/belgica.png" alt="Bélgica"><span>Bélgica</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/senegal.png" alt="Senegal"><span>Senegal</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/senegal.png" alt="Senegal"><span>Senegal</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                     </article>
 
                 </div>
@@ -808,9 +840,11 @@
                             <span class="numero-jogo">Jogo 81</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/brasil.png" alt="Brasil"><span>Brasil</span><span class="placar">2</span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/brasil.png" alt="Brasil"><span>Brasil</span><span class="placar">2</span>
+						<span class="penaltis"></span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/japao.png" alt="Japão"><span>Japão</span><span class="placar">1</span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/japao.png" alt="Japão"><span>Japão</span><span class="placar">1</span>
+						<span class="penaltis"></span></div>
                     </article>
 
                     <article class="card-jogo linha-saida-esquerda" data-jogo="82">
@@ -818,9 +852,11 @@
                             <span class="numero-jogo">Jogo 82</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/costa-do-marfim.png" alt="Costa do Marfim"><span>Costa do Marfim</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/costa-do-marfim.png" alt="Costa do Marfim"><span>Costa do Marfim</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/noruega.png" alt="Noruega"><span>Noruega</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/noruega.png" alt="Noruega"><span>Noruega</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                     </article>
 
                     <article class="card-jogo linha-saida-esquerda" data-jogo="83">
@@ -828,9 +864,11 @@
                             <span class="numero-jogo">Jogo 83</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/mexico.png" alt="México"><span>México</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/mexico.png" alt="México"><span>México</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/equador.png" alt="Equador"><span>Equador</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/equador.png" alt="Equador"><span>Equador</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                     </article>
 
                     <article class="card-jogo linha-saida-esquerda" data-jogo="84">
@@ -838,9 +876,11 @@
                             <span class="numero-jogo">Jogo 84</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/inglaterra.png" alt="Inglaterra"><span>Inglaterra</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/inglaterra.png" alt="Inglaterra"><span>Inglaterra</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/republica-do-congo.png" alt="República do Congo"><span>R. do Congo</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/republica-do-congo.png" alt="República do Congo"><span>R. do Congo</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                     </article>
 
                     <article class="card-jogo linha-saida-esquerda" data-jogo="85">
@@ -848,9 +888,11 @@
                             <span class="numero-jogo">Jogo 85</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/argentina.png" alt="Argentina"><span>Argentina</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/argentina.png" alt="Argentina"><span>Argentina</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/cabo-verde.png" alt="Cabo Verde"><span>Cabo Verde</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/cabo-verde.png" alt="Cabo Verde"><span>Cabo Verde</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                     </article>
 
                     <article class="card-jogo linha-saida-esquerda" data-jogo="86">
@@ -858,9 +900,11 @@
                             <span class="numero-jogo">Jogo 86</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/australia.png" alt="Austrália"><span>Austrália</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/australia.png" alt="Austrália"><span>Austrália</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/egito.png" alt="Egito"><span>Egito</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/egito.png" alt="Egito"><span>Egito</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                     </article>
 
                     <article class="card-jogo linha-saida-esquerda" data-jogo="87">
@@ -868,9 +912,11 @@
                             <span class="numero-jogo">Jogo 87</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/suica.png" alt="Suíça"><span>Suíça</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/suica.png" alt="Suíça"><span>Suíça</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/argelia.png" alt="Argélia"><span>Argélia</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/argelia.png" alt="Argélia"><span>Argélia</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                     </article>
 
                     <article class="card-jogo linha-saida-esquerda" data-jogo="88">
@@ -878,9 +924,11 @@
                             <span class="numero-jogo">Jogo 88</span>
                             <span>2ª Fase</span>
                         </div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/colombia.png" alt="Colômbia"><span>Colômbia</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/colombia.png" alt="Colômbia"><span>Colômbia</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                         <div class="versus">x</div>
-                        <div class="time"><img class="escudo-time" src="./assets/escudos/gana.png" alt="Gana"><span>Gana</span><span class="placar"></span></div>
+                        <div class="time"><img class="escudo-time" src="./assets/escudos/gana.png" alt="Gana"><span>Gana</span><span class="placar"></span>
+						<span class="penaltis"></span></div>
                     </article>
 
                 </div>
