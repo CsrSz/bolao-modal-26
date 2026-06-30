@@ -97,7 +97,7 @@ button, .btn, .aba, .campo, .placar {
     background-color: var(--cor-destaque);
     color: #ffffff;
     border: none;
-    padding: 12px 24px;
+    padding: 10px 24px;
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
@@ -121,8 +121,8 @@ button, .btn, .aba, .campo, .placar {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 16px;
-    border-radius: 999px;
+    padding: 10px 24px;
+    border-radius: 8px;
     background: #ff8300;
     color: #ffffff;
     font-family: 'Happy Monkey', Arial, sans-serif;
