@@ -3,7 +3,6 @@ const SENHA_ADMIN = 'Modal@2026';
 let jogos = [];
 let resultados = [];
 let grupoAtual = 'A';
-let gerarCompeticao = null;
 
 function validarAcessoAdmin() {
 
@@ -32,17 +31,7 @@ function validarAcessoAdmin() {
 
 }
 
-async function carregarEngine() {
-
-    const modulo = await import('./engine/competicao.js');
-
-    gerarCompeticao = modulo.gerarCompeticao;
-
-}
-
-async function carregarJogosAdmin() {
-
-    await carregarEngine();
+async function carregarJogos() {
 
     const { data, error } = await supabase
         .from('jogos')
@@ -51,17 +40,14 @@ async function carregarJogosAdmin() {
 
     if (error) {
         console.error('Erro ao carregar jogos:', error);
-        return;
+        jogos = [];
+        return false;
     }
 
     jogos = data;
 
-    await carregarResultados();
+    return true;
 
-    await processarCompeticao();
-
-    criarAbas();
-    renderizarGrupo(grupoAtual);
 }
 
 async function carregarResultados() {
@@ -73,73 +59,58 @@ async function carregarResultados() {
     if (error) {
         console.error('Erro ao carregar resultados:', error);
         resultados = [];
-        return;
+        return false;
     }
 
     resultados = data;
 
-}
-
-async function processarCompeticao() {
-
-    if (!gerarCompeticao) {
-        return;
-    }
-
-    const competicao = gerarCompeticao(jogos, resultados);
-
-    if (
-        !competicao.atualizacoesJogos ||
-        competicao.atualizacoesJogos.length === 0
-    ) {
-        return;
-    }
-
-    await aplicarAtualizacoesJogos(
-        competicao.atualizacoesJogos
-    );
+    return true;
 
 }
 
-async function aplicarAtualizacoesJogos(atualizacoes) {
+async function reprocessarChaveamentoMataMata(exibirAlerta = true) {
 
-    for (const jogo of atualizacoes) {
-
-        const { error } = await supabase
-            .from('jogos')
-            .update({
-                mandante: jogo.mandante,
-                visitante: jogo.visitante,
-                origem_mandante: jogo.origem_mandante,
-                origem_visitante: jogo.origem_visitante
-            })
-            .eq('id', jogo.id);
-
-        if (error) {
-            console.error(
-                `Erro ao atualizar jogo ${jogo.id}:`,
-                error
-            );
-            continue;
-        }
-
-        console.log(
-            `Jogo ${jogo.id} atualizado: ${jogo.mandante} x ${jogo.visitante}`
-        );
-
-    }
-
-    const { data, error } = await supabase
-        .from('jogos')
-        .select('*')
-        .order('id');
+    const { error } = await supabase
+        .rpc('reprocessar_chaveamento_mata_mata');
 
     if (error) {
-        console.error('Erro ao recarregar jogos:', error);
-        return;
+
+        console.error(
+            'Erro ao reprocessar chaveamento do mata-mata:',
+            error
+        );
+
+        if (exibirAlerta) {
+            alert(
+                'Resultado salvo, mas houve erro ao atualizar o chaveamento do mata-mata.'
+            );
+        }
+
+        return false;
+
     }
 
-    jogos = data;
+    console.log(
+        'Chaveamento do mata-mata reprocessado com sucesso.'
+    );
+
+    return true;
+
+}
+
+async function carregarJogosAdmin() {
+
+    await carregarJogos();
+
+    await carregarResultados();
+
+    await reprocessarChaveamentoMataMata(false);
+
+    await carregarJogos();
+
+    criarAbas();
+
+    renderizarGrupo(grupoAtual);
 
 }
 
@@ -174,13 +145,16 @@ function criarAbas() {
             botao.classList.add('ativa');
 
             renderizarGrupo(grupo);
+
         };
 
         container.appendChild(botao);
+
     });
+
 }
 
-async function buscarResultado(jogoId) {
+function buscarResultado(jogoId) {
 
     const resultado = resultados.find(
         r => Number(r.jogo_id) === Number(jogoId)
@@ -208,7 +182,7 @@ async function renderizarGrupo(grupo) {
 
     for (const jogo of jogosGrupo) {
 
-        const resultado = await buscarResultado(jogo.id) || {};
+        const resultado = buscarResultado(jogo.id) || {};
 
         const preenchido =
             resultado.mandante !== undefined &&
@@ -277,6 +251,7 @@ async function renderizarGrupo(grupo) {
     }
 
     configurarEventos();
+
 }
 
 function montarSelectVencedor(jogo, resultado) {
@@ -320,6 +295,23 @@ function configurarEventos() {
     selects.forEach(select => {
         select.addEventListener('change', salvarResultado);
     });
+
+}
+
+async function atualizarAdminAposResultado(jogoMataMata) {
+
+    await carregarResultados();
+
+    if (jogoMataMata) {
+        await reprocessarChaveamentoMataMata();
+    }
+
+    await carregarJogos();
+
+    criarAbas();
+
+    renderizarGrupo(grupoAtual);
+
 }
 
 async function salvarResultado() {
@@ -329,6 +321,9 @@ async function salvarResultado() {
     const jogo = jogos.find(
         j => Number(j.id) === Number(id)
     );
+
+    const jogoMataMata =
+        jogo && jogo.grupo === 'MATA';
 
     const campoMandante = document.querySelector(
         `.oficial-m[data-id="${id}"]`
@@ -348,11 +343,7 @@ async function salvarResultado() {
 
         await apagarResultado(id);
 
-        await carregarResultados();
-
-        await processarCompeticao();
-
-        renderizarGrupo(grupoAtual);
+        await atualizarAdminAposResultado(jogoMataMata);
 
         return;
 
@@ -366,9 +357,6 @@ async function salvarResultado() {
     const placarVisitante = Number(visitante);
 
     let vencedor = null;
-
-    const jogoMataMata =
-        jogo && jogo.grupo === 'MATA';
 
     const empate =
         placarMandante === placarVisitante;
@@ -402,11 +390,8 @@ async function salvarResultado() {
         return;
     }
 
-    await carregarResultados();
+    await atualizarAdminAposResultado(jogoMataMata);
 
-    await processarCompeticao();
-
-    renderizarGrupo(grupoAtual);
 }
 
 async function apagarResultado(jogoId) {
@@ -419,10 +404,12 @@ async function apagarResultado(jogoId) {
     if (error) {
         console.error('Erro ao apagar resultado:', error);
         alert('Erro ao apagar resultado');
-        return;
+        return false;
     }
 
     console.log(`Resultado do jogo ${jogoId} apagado`);
+
+    return true;
 
 }
 
