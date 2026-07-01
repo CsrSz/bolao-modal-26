@@ -72,42 +72,24 @@
             padding: 28px;
         }
 
-
-        .topo-chaveamento {
-            width: 100%;
-            max-width: 1840px;
-            margin: 0 auto 22px;
+        .topo {
+            max-width: 1780px;
+            margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 16px;
-            padding: 0 24px;
         }
 
-        .btn-voltar {
-            display: inline-flex;
+        .topo-chaveamento {
+            width: 100%;
+            max-width: 1840px;
+            margin: 0 auto 24px auto;
+            display: flex;
             align-items: center;
-            justify-content: center;
-            min-height: 40px;
-            padding: 10px 16px;
-            border: 1px solid rgba(56, 189, 248, 0.45);
-            border-radius: 999px;
-            background: rgba(8, 40, 77, 0.88);
-            color: var(--branco);
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-decoration: none;
-            text-transform: uppercase;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
-            transition: 0.2s ease;
-        }
-
-        .btn-voltar:hover {
-            border-color: var(--amarelo);
-            color: var(--amarelo);
-            transform: translateY(-1px);
+            justify-content: space-between;
+            padding: 0 24px;
+            box-sizing: border-box;
         }
 
         .logo-modal-topo {
@@ -117,11 +99,51 @@
             filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
         }
 
+        .marca {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .marca span {
+            color: var(--azul-claro);
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .marca strong {
+            font-size: 22px;
+            letter-spacing: 1px;
+        }
+
+        .badge-topo {
+            padding: 10px 18px;
+            border: 1px solid rgba(56, 189, 248, 0.45);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--cinza);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+        }
 
         .titulo-area {
             max-width: 1780px;
             margin: 0 auto 24px;
             text-align: center;
+        }
+
+        .logo_modal {
+            display: block;
+            width: 225px;
+            max-height: 105px;
+            object-fit: contain;
+            margin: 0 auto 14px;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.35));
         }
 
         .titulo-area h1 {
@@ -151,7 +173,7 @@
         }
 
         .area-chaveamento {
-            max-width: 1840px;
+            max-width: 1780px;
             margin: 0 auto;
             padding: 22px;
             border: 1px solid rgba(255, 255, 255, 0.11);
@@ -166,10 +188,10 @@
         }
 
         .chaveamento {
-            width: max-content;
-            min-width: 1748px;
+			width: max-content;
+            min-width: 1730px;
             height: 900px;
-            margin: 0 auto;
+			margin: 0 auto;
             display: grid;
             grid-template-columns:
                 215px
@@ -214,10 +236,10 @@
         .rodada .card-jogo {
             align-self: center;
         }
-        .card-jogo .time.tem-placar,
-        .card-jogo.placeholder .time.tem-placar {
-            grid-template-columns: 22px 1fr 22px 22px;
-        }
+		
+		.card-jogo .time.tem-placar, .card-jogo.placeholder .time.tem-placar {
+			grid-template-columns: 22px 1fr 22px 22px;
+		}
 
         .rodada-16 .card-jogo:nth-of-type(1) { grid-row: 1; }
         .rodada-16 .card-jogo:nth-of-type(2) { grid-row: 2; }
@@ -328,21 +350,22 @@
             background: rgba(255, 255, 255, 0.12);
             border: 1px solid rgba(255, 216, 77, 0.25);
         }
-        .penaltis {
-            min-width: 15px;
-            min-height: 17px;
-            display: grid;
-            place-items: center;
-            border-radius: 6px;
-            color: var(--branco);
-            font-size: 9px;
-            font-weight: 950;
-        }
+		
+		.penaltis {
+			min-width: 15px;
+			min-height: 17px;
+			display: grid;
+			place-items: center;
+			border-radius: 6px;
+			color: #ffffff;
+			font-size: 9px;
+			font-weight: 950;
+		}
 
-        .penaltis:not(:empty) {
-            background: rgba(255, 131, 0, 0.22);
-            border: 1px solid rgba(255, 131, 0, 0.55);
-        }
+		.penaltis:not(:empty) {
+			background: rgba(255, 131, 0, 0.22);
+			border: 1px solid rgba(255, 131, 0, 0.55);
+		}
 
         .flag {
             width: 34px;
@@ -466,11 +489,6 @@
             height: 22px;
         }
 
-        .card-final .time.tem-placar,
-        .card-terceiro .time.tem-placar {
-            grid-template-columns: 40px 1fr 22px 22px;
-        }
-
         .legenda {
             max-width: 1780px;
             margin: 16px auto 0;
@@ -505,12 +523,14 @@
                 padding: 18px 12px;
             }
 
-            .topo-chaveamento {
-                padding: 0;
+            .topo {
+                align-items: flex-start;
+                flex-direction: column;
             }
 
-            .logo-modal-topo {
-                height: 42px;
+            .badge-topo {
+                width: 100%;
+                text-align: center;
             }
 
             .titulo-area h1 span {
@@ -522,22 +542,60 @@
                 padding: 12px;
             }
         }
+		
+			.voltar-sistema {
+				position: fixed;
+				top: 18px;
+				left: 18px;
+				z-index: 20;
+				padding: 10px 16px;
+				border: 1px solid rgba(56, 189, 248, 0.45);
+				border-radius: 999px;
+				background: rgba(8, 40, 77, 0.88);
+				color: #ffffff;
+				font-size: 12px;
+				font-weight: 800;
+				text-decoration: none;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				backdrop-filter: blur(10px);
+		}
+
+			.voltar-sistema:hover {
+				border-color: #ffd84d;
+				color: #ffd84d;
+		}
     </style>
 </head>
 
 <body>
     <main class="pagina">
-        <div class="topo-chaveamento">
-            <a href="palpites.html" class="btn-voltar">Voltar ao Sistema</a>
+	
+		<!--<a class="voltar-sistema" href="palpites.html">Voltar ao Sistema</a>-->
 
-            <img
-                src="assets/logo_modal.png"
-                alt="Modal Marcas"
-                class="logo-modal-topo"
-            >
-        </div>
+    <div class="topo-chaveamento">
+        <a href="palpites.html" class="btn-voltar">Voltar ao Sistema</a>
+
+        <img 
+            src="assets/logo_modal.png" 
+            alt="Modal Marcas" 
+            class="logo-modal-topo"
+        >
+    </div>
+
+        <!--<header class="topo">
+            <div class="marca">
+                <span>Bolão MODAL Web</span>
+                <strong>Visual Mata-Mata</strong>
+            </div>
+
+            <div class="badge-topo">
+                Sprint Visual 2.0 | Layout Estático
+            </div>
+        </header>-->
 
         <section class="titulo-area">
+            <img class="logo_modal" src="./assets/logo_modal.png" alt="MODAL Marcas & Patentes" onerror="this.style.display='none'">
 
             <h1>
                 Caminho
@@ -924,10 +982,11 @@
         </div>
 
     </main>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+	
+	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase.js"></script>
+    <script src="js/palpites.js"></script>
     <script src="js/chaveamento-tela.js"></script>
-
+	
 </body>
 </html>
