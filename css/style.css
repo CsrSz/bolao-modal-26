@@ -598,3 +598,209 @@ h1.titulo-principal {
         font-size: 0.95rem;
     }
 }
+
+/* ==========================================================================
+   11. RANKING MATA-MATA 2.0
+   ========================================================================== */
+
+.ranking-mata-container {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.ranking-mata-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.ranking-mata-header h1 {
+    margin-bottom: 4px;
+    text-align: left;
+}
+
+.ranking-mata-header p {
+    color: var(--cor-texto-mutado);
+    font-size: 0.95rem;
+}
+
+.ranking-mata-grid {
+    display: grid;
+    grid-template-columns: minmax(430px, 1fr) 260px minmax(430px, 1fr);
+    gap: 18px;
+    justify-content: center;
+    align-items: start;
+}
+
+.ranking-card {
+    background: rgba(30, 41, 59, 0.76);
+    border: var(--borda-suave);
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.ranking-card h2 {
+    margin-bottom: 14px;
+    font-size: 1.2rem;
+}
+
+.ranking-card-principal,
+.ranking-card-resumo,
+.ranking-card-aviso {
+    height: auto;
+    min-height: auto;
+}
+
+.ranking-card-principal .tabela-responsiva,
+.ranking-card-resumo .tabela-responsiva {
+    height: auto;
+    overflow: visible;
+}
+
+.ranking-card-aviso {
+    align-self: start;
+    text-align: center;
+    background:
+        radial-gradient(circle at top, rgba(255, 216, 77, 0.18), transparent 45%),
+        rgba(8, 40, 77, 0.92);
+}
+
+.ranking-card-aviso img {
+    width: 92px;
+    max-height: 118px;
+    object-fit: contain;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.45));
+}
+
+.ranking-card-aviso p {
+    color: var(--cor-texto);
+    line-height: 1.45;
+    margin-bottom: 14px;
+}
+
+.ranking-card-aviso strong {
+    display: block;
+    color: #ffd84d;
+    line-height: 1.45;
+}
+
+.ranking-principal,
+.ranking-resumo {
+    height: auto;
+    table-layout: auto;
+}
+
+.ranking-principal th:nth-child(1) { width: 24%; }
+.ranking-principal th:nth-child(2) { width: 52%; }
+.ranking-principal th:nth-child(3) { width: 24%; }
+
+.ranking-resumo th:nth-child(1) { width: 32%; }
+
+.ranking-resumo th:nth-child(2),
+.ranking-resumo th:nth-child(3),
+.ranking-resumo th:nth-child(4),
+.ranking-resumo th:nth-child(5),
+.ranking-resumo th:nth-child(6) {
+    width: 13.6%;
+}
+
+.ranking-principal td,
+.ranking-resumo td {
+    padding: 10px 8px;
+    font-size: 0.9rem;
+}
+
+.ranking-principal td:nth-child(2),
+.ranking-resumo td:nth-child(1) {
+    text-align: left;
+    font-weight: 800;
+}
+
+.ranking-principal td:nth-child(3),
+.ranking-resumo td:not(:first-child) {
+    font-weight: 900;
+    color: #ffd84d;
+}
+
+.ranking-resumo th {
+    font-size: 0.75rem;
+}
+
+.ranking-resumo td {
+    white-space: nowrap;
+}
+
+.ranking-nome-tooltip {
+    position: relative;
+    cursor: help;
+    border-bottom: 1px dashed rgba(255, 216, 77, 0.55);
+}
+
+.ranking-nome-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+    width: max-content;
+    max-width: 360px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: rgba(2, 8, 23, 0.96);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    line-height: 1.35;
+    white-space: nowrap;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 216, 77, 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    z-index: 50;
+}
+
+.ranking-nome-tooltip:hover::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(2px);
+}
+
+.ranking-nome-tooltip::before {
+    content: "";
+    position: absolute;
+    left: calc(100% + 5px);
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent rgba(2, 8, 23, 0.96) transparent transparent;
+    opacity: 0;
+    transition: opacity 0.18s ease;
+    z-index: 51;
+}
+
+.ranking-nome-tooltip:hover::before {
+    opacity: 1;
+}
+
+@media (max-width: 1100px) {
+    .ranking-mata-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ranking-mata-header {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .ranking-mata-header h1 {
+        text-align: center;
+    }
+}

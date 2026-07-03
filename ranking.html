@@ -4,36 +4,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ranking - Bolão Modal 2026</title>
+<title>Ranking Mata-Mata - Bolão Modal 2026</title>
 
 <link rel="stylesheet" href="css/style.css">
-
 </head>
 
 <body>
 
-<div class="container">
+<div class="ranking-mata-container">
 
-<h1>🏆 Ranking Geral</h1>
+    <header class="ranking-mata-header">
+        <div>
+            <h1>🏆 Ranking Mata-Mata</h1>
+            <p>Bolão MODAL Web 2026</p>
+        </div>
 
-<table class="ranking">
+        <a href="palpites.html" class="btn">Voltar</a>
+    </header>
 
-<tr>
-<th>Pos</th>
-<th>Participante</th>
-<th>Pontos</th>
-</tr>
+    <main class="ranking-mata-grid">
 
-<tbody id="ranking-body">
-</tbody>
+        <section class="ranking-card ranking-card-principal">
+            <h2>Classificação</h2>
 
-</table>
+            <div class="tabela-responsiva">
+                <table class="ranking ranking-principal">
+                    <thead>
+                        <tr>
+                            <th>Posição</th>
+                            <th>Jogador</th>
+                            <th>Pontos</th>
+                        </tr>
+                    </thead>
 
-<br>
+                    <tbody id="ranking-body"></tbody>
+                </table>
+            </div>
+        </section>
 
-<a href="palpites.html" class="btn" style="text-decoration: none;">
-    Voltar
-</a>
+        <section class="ranking-card ranking-card-aviso">
+            <img src="assets/copa-2026.png" alt="Copa do Mundo 2026">
+
+            <h2>Aviso!</h2>
+
+            <p>
+                Em caso de empate na pontuação, a ordem exibida segue o critério atual do sistema.
+            </p>
+
+            <strong>
+                A tabela ao lado mostra quantas vezes cada jogador pontuou em cada faixa.
+            </strong>
+        </section>
+
+        <section class="ranking-card ranking-card-resumo">
+            <h2>Resumo de Pontos</h2>
+
+            <div class="tabela-responsiva">
+                <table class="ranking ranking-resumo">
+                    <thead>
+                        <tr>
+                            <th>Jogador</th>
+                            <th>10 pts</th>
+                            <th>6 pts</th>
+                            <th>4 pts</th>
+                            <th>2 pts</th>
+                            <th>0 pts</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="ranking-resumo-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
 
 </div>
 
@@ -42,5 +86,4 @@
 <script src="js/ranking.js"></script>
 
 </body>
-
 </html>
