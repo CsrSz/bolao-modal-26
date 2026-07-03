@@ -804,3 +804,21 @@ h1.titulo-principal {
         text-align: center;
     }
 }
+
+/* GARANTE QUE O BALÃO DO RANKING FIQUE POR CIMA */
+.ranking-card,
+.ranking,
+.ranking tbody,
+.ranking tr,
+.ranking td {
+    overflow: visible;
+}
+
+.ranking-nome-tooltip {
+    z-index: 9999;
+}
+
+.ranking-nome-tooltip::before,
+.ranking-nome-tooltip::after {
+    z-index: 10000;
+}
