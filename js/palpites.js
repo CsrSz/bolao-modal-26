@@ -1,5 +1,7 @@
 let grupoSelecionado = 'A';
 
+const FASE_MATA_ATUAL = 'QUARTAS';
+
 async function carregarJogos() {
 
     const usuario = localStorage.getItem('usuarioLogado');
@@ -76,7 +78,9 @@ async function carregarJogos() {
         tbody.innerHTML += `
             <tr>
                 <td>📆 ${dataFormatada}</td>
+
                 <td>⌚ ${formatarHora(jogo.hora)}</td>
+
                 <td>
                     🏟️ ${jogo.local || ''}
                     ${
@@ -140,6 +144,10 @@ function jogoDisponivelParaPalpite(jogo) {
 
     if (jogo.grupo !== 'MATA') {
         return true;
+    }
+
+    if (jogo.fase !== FASE_MATA_ATUAL) {
+        return false;
     }
 
     return (
@@ -285,7 +293,7 @@ function atualizarTituloGrupo() {
 
     titulo.textContent =
         grupoSelecionado === 'MATA'
-            ? '🏆 Mata-Mata'
+            ? `🏆 Mata-Mata - ${formatarFase(FASE_MATA_ATUAL)}`
             : `🏆 Grupo ${grupoSelecionado}`;
 
 }
@@ -311,7 +319,7 @@ function formatarFase(fase) {
 
     const fases = {
 
-        '16AVOS': 'Seguda Fase',
+        '16AVOS': 'Segunda Fase',
 
         'OITAVAS': 'Oitavas de Final',
 
