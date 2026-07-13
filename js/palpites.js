@@ -1,6 +1,6 @@
 let grupoSelecionado = 'A';
 
-const FASE_MATA_ATUAL = 'QUARTAS';
+const FASE_MATA_ATUAL = 'SEMIFINAL';
 
 async function carregarJogos() {
 
