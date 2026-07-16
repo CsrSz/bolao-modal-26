@@ -1,6 +1,6 @@
 let grupoSelecionado = 'A';
 
-const FASE_MATA_ATUAL = 'SEMIFINAL';
+const FASES_MATA_ATUAIS = ['TERCEIRO', 'FINAL'];
 
 async function carregarJogos() {
 
@@ -146,7 +146,7 @@ function jogoDisponivelParaPalpite(jogo) {
         return true;
     }
 
-    if (jogo.fase !== FASE_MATA_ATUAL) {
+    if (!FASES_MATA_ATUAIS.includes(jogo.fase)) {
         return false;
     }
 
@@ -293,7 +293,7 @@ function atualizarTituloGrupo() {
 
     titulo.textContent =
         grupoSelecionado === 'MATA'
-            ? `🏆 Mata-Mata - ${formatarFase(FASE_MATA_ATUAL)}`
+            ? '🏆 Mata-Mata - 3º Lugar e Final'
             : `🏆 Grupo ${grupoSelecionado}`;
 
 }
