@@ -165,7 +165,7 @@ O sistema foi considerado funcional, com dados íntegros, mas com riscos crític
 
 # 6. Sprint 1: Backup e Documentação Oficial
 
-**Status:** Em conclusão
+**Status:** Concluída
 
 ## Objetivo
 
@@ -193,83 +193,24 @@ docs/05-roadmap-sprints.md
 
 # 7. Sprint 2: Retirada de Arquivos Sensíveis e Organização Inicial
 
+**Status:** Concluída
+
 ## Objetivo
 
-Retirar da publicação arquivos antigos ou sensíveis que não participam do sistema ativo.
+Retirar da publicação arquivos antigos ou sensíveis que não participavam do sistema ativo.
 
-## Prioridade principal
-
-Remover do repositório público:
-
-```text
-dados/participantes.json
-```
-
-Esse arquivo contém nomes e senhas em texto aberto.
-
-## Outros candidatos
-
-```text
-dados/resultados.json
-chaveamento.ORIGINAL
-```
-
-## Estratégia
-
-A Sprint deverá ser dividida em etapas pequenas.
+## Etapas concluídas
 
 ### Sprint 2.1
 
-Backup externo dos arquivos antigos.
+Backup externo dos arquivos antigos e sensíveis.
 
 ### Sprint 2.2
 
-Remoção de `dados/participantes.json`.
-
-### Sprint 2.3
-
-Teste completo do sistema.
-
-### Sprint 2.4
-
-Avaliação e retirada de `dados/resultados.json`.
-
-### Sprint 2.5
-
-Avaliação e movimentação de `chaveamento.ORIGINAL`.
-
-## Fora do escopo
-
-* alterar login;
-* mudar senhas;
-* ativar RLS;
-* corrigir ranking;
-* alterar visual;
-* remover a Engine JavaScript;
-* limpar `style.css`.
-
-## Risco
-
-Médio.
-
-A remoção é tecnicamente simples, mas deverá ser validada em produção.
-
-## Teste obrigatório
+Remoção de:
 
 ```text
-Página inicial
-Login
-Palpites
-Ranking
-Admin
-Chaveamento
-Console do navegador
-Deploy da Vercel
-```
-
-## Critério de conclusão
-
-Nenhum arquivo público contém a lista antiga de senhas.
+dados/participantes.json
 
 ---
 
@@ -1233,10 +1174,10 @@ A estratégia não deverá ser alterada informalmente durante a execução de um
 
 # 30. Próxima Sprint oficial
 
-Depois da conclusão da documentação, a próxima Sprint será:
+A próxima Sprint será:
 
 ```text
-Sprint 2: Retirada de Arquivos Sensíveis e Organização Inicial
+Sprint 3: Unificação da Pontuação e do Desempate
 ```
 
 Primeiro alvo:

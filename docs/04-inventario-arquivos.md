@@ -468,34 +468,21 @@ arquivar
 
 ## 5.8 `chaveamento.ORIGINAL`
 
-**Classificação:** Backup
-**Função:** Preservar uma versão anterior do chaveamento.
+**Classificação:** Backup removido  
+**Situação atual:** Removido do repositório na Sprint 2.5.
 
-### Dependências
+### Dependências encontradas
 
-Nenhuma dependência encontrada.
+Nenhuma dependência funcional foi encontrada.
 
-### Relação com a produção
+As únicas referências existentes estavam na documentação histórica do projeto.
 
-Não é carregado por nenhuma página ou JavaScript.
+### Backup
 
-### Risco
-
-Baixo.
-
-Por estar dentro do repositório público, pode ser acessado diretamente dependendo da publicação da Vercel.
-
-### Destino recomendado
-
-Mover futuramente para:
+O arquivo permanece preservado externamente em:
 
 ```text
-backups/
-```
-
-ou manter apenas no histórico do Git.
-
-Depois da validação, poderá ser removido da raiz pública.
+T:\Bolao-Modal-Backups\Sprint-2.1-Legado-2026-07-22\
 
 ---
 
@@ -951,69 +938,57 @@ Somente criar no futuro caso uma necessidade real de funções utilitárias seja
 
 ## 9.1 `dados/participantes.json`
 
-**Classificação:** Antigo, sensível e candidato urgente à remoção pública
-**Função anterior:** Armazenar participantes antes da integração completa com o Supabase.
+**Classificação:** Antigo e sensível  
+**Situação atual:** Removido do repositório na Sprint 2.2.
 
-### Conteúdo
+### Conteúdo anterior
 
-O arquivo contém:
+O arquivo continha nomes e senhas de participantes em texto aberto.
 
-```text
-nomes
-IDs
-senhas em texto aberto
-```
+### Dependências encontradas
 
-### Utilizado por
+Nenhuma página ou JavaScript ativo utilizava esse arquivo.
 
-Nenhuma página ou JavaScript atual.
+### Backup
 
-### Divergência
+O arquivo foi preservado externamente antes da remoção.
 
-```text
-Arquivo JSON: 18 participantes
-Supabase: 19 participantes
-```
+### Resultado
 
-### Risco
+A URL pública passou a retornar `404`.
 
-Crítico.
+O login continuou funcionando por consultar diretamente a tabela `participantes` no Supabase.
 
-Caso publicado, pode permitir acesso direto às senhas antigas ou atuais.
+### Segurança
 
-### Destino recomendado
-
-Na primeira Sprint de organização:
-
-1. criar backup fora da pasta pública;
-2. confirmar que nenhum arquivo depende dele;
-3. removê-lo do repositório;
-4. realizar commit;
-5. validar a Vercel;
-6. considerar a troca das senhas expostas.
+As senhas presentes no arquivo devem ser consideradas comprometidas e não poderão ser reutilizadas na próxima competição.
 
 ---
 
 ## 9.2 `dados/resultados.json`
 
-**Classificação:** Antigo e candidato à remoção
-**Função anterior:** Armazenar resultados antes do uso integral do Supabase.
+**Classificação:** Antigo  
+**Situação atual:** Removido do repositório na Sprint 2.4.
 
-### Conteúdo
+### Conteúdo anterior
 
-Possui apenas alguns resultados antigos.
+O arquivo possuía apenas alguns resultados antigos.
 
-### Utilizado por
+### Dependências encontradas
 
-Nenhuma página ou JavaScript atual.
+Nenhuma página ou JavaScript ativo utilizava esse arquivo.
 
-### Risco
+Os resultados oficiais são carregados da tabela `resultados` no Supabase.
 
-Baixo.
+### Backup
 
-### Destino recomendado
+O arquivo permanece preservado no backup externo da Sprint 2.1.
 
-Remover junto da organização dos arquivos antigos, depois de backup e teste.
+### Resultado
+
+A URL pública passou a retornar `404`.
+
+O ranking, o Admin e o chaveamento continuaram funcionando normalmente.
 
 ---
 
