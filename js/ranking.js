@@ -1,262 +1,266 @@
-async function carregarRanking() {
-    try {
-        const dados = await carregarDadosPontuacao();
+const RPC_RANKING_OFICIAL = 'ranking_completo';
 
-        renderizarRankingPrincipal(dados.rankingOrdenado);
-        renderizarResumoPontuacao(dados.resumoPorId);
+/**
+ * Converte valores retornados pelo PostgreSQL/Supabase para número.
+ * Campos bigint podem chegar ao navegador como texto.
+ */
+function numero(valor) {
+    const convertido = Number(valor);
 
-    } catch (erro) {
-        console.error('Erro ao carregar ranking:', erro);
-
-        document.getElementById('ranking-body').innerHTML = `
-            <tr><td colspan="3">Erro ao carregar ranking.</td></tr>
-        `;
-
-        document.getElementById('ranking-resumo-body').innerHTML = `
-            <tr><td colspan="6">Erro ao carregar resumo.</td></tr>
-        `;
-    }
+    return Number.isFinite(convertido)
+        ? convertido
+        : 0;
 }
 
-async function carregarDadosPontuacao() {
-    const [rankingResp, participantesResp, palpitesResp, resultadosResp] =
-        await Promise.all([
-            supabaseClient.rpc('ranking_mata_mata'),
+/**
+ * Protege textos inseridos no HTML.
+ */
+function escaparHtml(valor) {
+    const texto = String(valor ?? '');
 
-            supabaseClient
-                .from('participantes')
-                .select('id, nome')
-                .order('id'),
-
-            supabaseClient
-                .from('palpites')
-                .select('participante_id, jogo_id, mandante, visitante')
-                .gte('jogo_id', 73)
-                .lte('jogo_id', 104),
-
-            supabaseClient
-                .from('resultados')
-                .select('jogo_id, mandante, visitante')
-                .gte('jogo_id', 73)
-                .lte('jogo_id', 104)
-        ]);
-
-    if (rankingResp.error) throw rankingResp.error;
-    if (participantesResp.error) throw participantesResp.error;
-    if (palpitesResp.error) throw palpitesResp.error;
-    if (resultadosResp.error) throw resultadosResp.error;
-
-    const participantes = participantesResp.data || [];
-    const palpites = palpitesResp.data || [];
-    const resultados = resultadosResp.data || [];
-    const ranking = rankingResp.data || [];
-
-    const resultadosPorJogo = new Map(
-        resultados.map(resultado => [
-            Number(resultado.jogo_id),
-            resultado
-        ])
-    );
-
-    const resumoPorId = new Map();
-    const participantePorNome = new Map();
-
-    participantes.forEach(participante => {
-        const item = {
-            id: Number(participante.id),
-            nome: participante.nome,
-            pontos_10: 0,
-            pontos_6: 0,
-            pontos_4: 0,
-            pontos_2: 0,
-            pontos_0: 0,
-            total: 0
-        };
-
-        resumoPorId.set(Number(participante.id), item);
-        participantePorNome.set(participante.nome, item);
-    });
-
-    palpites.forEach(palpite => {
-        const resultado = resultadosPorJogo.get(Number(palpite.jogo_id));
-        if (!resultado) return;
-
-        const pontos = calcularPontos(
-            palpite.mandante,
-            palpite.visitante,
-            resultado.mandante,
-            resultado.visitante
-        );
-
-        const item = resumoPorId.get(Number(palpite.participante_id));
-        if (!item) return;
-
-        if (pontos === 10) item.pontos_10++;
-        if (pontos === 6) item.pontos_6++;
-        if (pontos === 4) item.pontos_4++;
-        if (pontos === 2) item.pontos_2++;
-        if (pontos === 0) item.pontos_0++;
-
-        item.total += pontos;
-    });
-
-    const rankingOrdenado = ranking
-        .map(item => {
-            const resumo = participantePorNome.get(item.nome) || {};
-
-            return {
-                nome: item.nome,
-                pontos: Number(item.pontos || 0),
-                pontos_10: resumo.pontos_10 || 0,
-                pontos_6: resumo.pontos_6 || 0,
-                pontos_4: resumo.pontos_4 || 0,
-                pontos_2: resumo.pontos_2 || 0,
-                pontos_0: resumo.pontos_0 || 0
-            };
-        })
-        .sort(ordenarRankingComDesempate);
-
-    return {
-        rankingOrdenado,
-        resumoPorId: Array.from(resumoPorId.values())
+    const caracteres = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
     };
+
+    return texto.replace(
+        /[&<>"']/g,
+        caractere => caracteres[caractere]
+    );
 }
 
-function ordenarRankingComDesempate(a, b) {
-    if (b.pontos !== a.pontos) return b.pontos - a.pontos;
-    if (b.pontos_10 !== a.pontos_10) return b.pontos_10 - a.pontos_10;
-    if (b.pontos_6 !== a.pontos_6) return b.pontos_6 - a.pontos_6;
-    if (b.pontos_4 !== a.pontos_4) return b.pontos_4 - a.pontos_4;
-    if (b.pontos_2 !== a.pontos_2) return b.pontos_2 - a.pontos_2;
-
-    return a.nome.localeCompare(b.nome);
+/**
+ * Localiza o corpo da tabela principal.
+ *
+ * O primeiro seletor mantém compatibilidade com o HTML atual.
+ * O segundo funciona como segurança caso o tbody não tenha ID.
+ */
+function obterCorpoRanking() {
+    return (
+        document.getElementById('ranking-body') ||
+        document.querySelector('.ranking-principal tbody')
+    );
 }
 
-function renderizarRankingPrincipal(lista) {
-    const tbody = document.getElementById('ranking-body');
-    tbody.innerHTML = '';
+/**
+ * Localiza o corpo da tabela Resumo de Pontos.
+ *
+ * Os seletores alternativos evitam dependência desnecessária
+ * de um único ID no HTML.
+ */
+function obterCorpoResumo() {
+    return (
+        document.getElementById('ranking-resumo-body') ||
+        document.getElementById('resumo-body') ||
+        document.querySelector('.ranking-resumo tbody')
+    );
+}
 
-    if (!lista || lista.length === 0) {
-        tbody.innerHTML = `
-            <tr><td colspan="3">Nenhum participante encontrado.</td></tr>
-        `;
+/**
+ * Monta o texto exibido no balão ao passar o mouse
+ * sobre o nome do participante.
+ */
+function criarTooltip(item) {
+    return [
+        `10 pontos: ${numero(item.acertos_10)}`,
+        `6 pontos: ${numero(item.acertos_6)}`,
+        `4 pontos: ${numero(item.acertos_4)}`,
+        `2 pontos: ${numero(item.acertos_2)}`,
+        `0 pontos: ${numero(item.palpites_0)}`,
+        `Sem palpite: ${numero(item.jogos_sem_palpite)}`,
+        `Pendentes: ${numero(item.jogos_pendentes)}`
+    ].join(' | ');
+}
+
+/**
+ * Exibe uma mensagem dentro de uma tabela.
+ */
+function exibirMensagemTabela(
+    corpoTabela,
+    quantidadeColunas,
+    mensagem
+) {
+    if (!corpoTabela) {
         return;
     }
 
-    const quantidadePorPontuacao = lista.reduce((mapa, item) => {
-        mapa[item.pontos] = (mapa[item.pontos] || 0) + 1;
-        return mapa;
-    }, {});
+    corpoTabela.innerHTML = `
+        <tr>
+            <td
+                colspan="${quantidadeColunas}"
+                style="text-align: center;"
+            >
+                ${escaparHtml(mensagem)}
+            </td>
+        </tr>
+    `;
+}
 
-    lista.forEach((item, indice) => {
-        const classeLinha =
-            (indice <= 3 || indice === lista.length - 1)
-                ? 'class="top-ranking"'
-                : '';
+/**
+ * Renderiza a classificação oficial.
+ *
+ * A posição e a ordem já vêm prontas da função SQL.
+ * Nenhum desempate é calculado no navegador.
+ */
+function renderizarClassificacao(ranking) {
+    const corpoRanking = obterCorpoRanking();
 
-        const estaEmpatado =
-            quantidadePorPontuacao[item.pontos] > 1;
+    if (!corpoRanking) {
+        throw new Error(
+            'Corpo da tabela de classificação não encontrado.'
+        );
+    }
 
-        const nomeHtml = estaEmpatado
-            ? `
-                <span class="ranking-nome-tooltip" data-tooltip="${montarTooltip(item)}">
-                    ${item.nome}
-                </span>
-            `
-            : item.nome;
+    corpoRanking.innerHTML = '';
 
-        tbody.innerHTML += `
-            <tr ${classeLinha}>
-                <td>${indice + 1}º</td>
-                <td>${nomeHtml}</td>
-                <td>${item.pontos}</td>
+    ranking.forEach((item, indice) => {
+        const posicao =
+            numero(item.posicao) || indice + 1;
+
+        const destacarLinha =
+            posicao <= 4 ||
+            posicao === ranking.length;
+
+        const atributoClasse = destacarLinha
+            ? ' class="top-ranking"'
+            : '';
+
+        const nome = escaparHtml(item.nome);
+        const tooltip = escaparHtml(
+            criarTooltip(item)
+        );
+
+        corpoRanking.innerHTML += `
+            <tr${atributoClasse}>
+                <td>${posicao}º</td>
+
+                <td>
+                    <span
+                        class="ranking-nome-tooltip"
+                        data-tooltip="${tooltip}"
+                    >
+                        ${nome}
+                    </span>
+                </td>
+
+                <td>${numero(item.pontos)}</td>
             </tr>
         `;
     });
 }
 
-function renderizarResumoPontuacao(lista) {
-    const tbody = document.getElementById('ranking-resumo-body');
-    tbody.innerHTML = '';
+/**
+ * Renderiza o card Resumo de Pontos.
+ *
+ * As quantidades vêm diretamente da função ranking_completo().
+ */
+function renderizarResumo(ranking) {
+    const corpoResumo = obterCorpoResumo();
 
-    lista.forEach(item => {
-        tbody.innerHTML += `
+    if (!corpoResumo) {
+        console.warn(
+            'Corpo da tabela Resumo de Pontos não encontrado.'
+        );
+
+        return;
+    }
+
+    corpoResumo.innerHTML = '';
+
+    ranking.forEach(item => {
+        corpoResumo.innerHTML += `
             <tr>
-                <td>${item.nome}</td>
-                <td>${item.pontos_10}x</td>
-                <td>${item.pontos_6}x</td>
-                <td>${item.pontos_4}x</td>
-                <td>${item.pontos_2}x</td>
-                <td>${item.pontos_0}x</td>
+                <td>${escaparHtml(item.nome)}</td>
+                <td>${numero(item.acertos_10)}</td>
+                <td>${numero(item.acertos_6)}</td>
+                <td>${numero(item.acertos_4)}</td>
+                <td>${numero(item.acertos_2)}</td>
+                <td>${numero(item.palpites_0)}</td>
             </tr>
         `;
     });
 }
 
-function montarTooltip(item) {
-    return `10 pts: ${item.pontos_10}x | 6 pts: ${item.pontos_6}x | 4 pts: ${item.pontos_4}x | 2 pts: ${item.pontos_2}x | 0 pts: ${item.pontos_0}x`;
+/**
+ * Carrega o ranking oficial.
+ *
+ * Esta é a única consulta necessária para classificação,
+ * pontuação, resumo e desempates.
+ */
+async function carregarRanking() {
+    const corpoRanking = obterCorpoRanking();
+    const corpoResumo = obterCorpoResumo();
+
+    try {
+        const { data, error } = await supabaseClient
+            .rpc(RPC_RANKING_OFICIAL);
+
+        if (error) {
+            throw error;
+        }
+
+        const ranking = Array.isArray(data)
+            ? data
+            : [];
+
+        if (ranking.length === 0) {
+            exibirMensagemTabela(
+                corpoRanking,
+                3,
+                'Nenhum participante encontrado.'
+            );
+
+            exibirMensagemTabela(
+                corpoResumo,
+                6,
+                'Nenhum participante encontrado.'
+            );
+
+            return;
+        }
+
+        /*
+         * Não existe sort() aqui.
+         *
+         * A função SQL já entrega:
+         * 1. pontos;
+         * 2. acertos de 10;
+         * 3. acertos de 6;
+         * 4. acertos de 4;
+         * 5. acertos de 2;
+         * 6. nome.
+         */
+
+        renderizarClassificacao(ranking);
+        renderizarResumo(ranking);
+
+        console.info(
+            `Ranking oficial carregado: ${ranking.length} participantes.`
+        );
+    } catch (erro) {
+        console.error(
+            'Erro ao carregar ranking oficial:',
+            erro
+        );
+
+        exibirMensagemTabela(
+            corpoRanking,
+            3,
+            'Erro ao carregar o ranking.'
+        );
+
+        exibirMensagemTabela(
+            corpoResumo,
+            6,
+            'Erro ao carregar o resumo.'
+        );
+    }
 }
 
-function calcularPontos(
-    palpiteMandante,
-    palpiteVisitante,
-    resultadoMandante,
-    resultadoVisitante
-) {
-    if (
-        palpiteMandante === null ||
-        palpiteVisitante === null ||
-        resultadoMandante === null ||
-        resultadoVisitante === null ||
-        palpiteMandante === undefined ||
-        palpiteVisitante === undefined ||
-        resultadoMandante === undefined ||
-        resultadoVisitante === undefined
-    ) {
-        return 0;
-    }
-
-    const pm = Number(palpiteMandante);
-    const pv = Number(palpiteVisitante);
-    const rm = Number(resultadoMandante);
-    const rv = Number(resultadoVisitante);
-
-    if ([pm, pv, rm, rv].some(Number.isNaN)) {
-        return 0;
-    }
-
-    if (pm === rm && pv === rv) {
-        return 10;
-    }
-
-    if (rm === rv) {
-        return 0;
-    }
-
-    const acertouVencedor =
-        (pm > pv && rm > rv) ||
-        (pm < pv && rm < rv);
-
-    if (
-        acertouVencedor &&
-        (pm === rm || pv === rv)
-    ) {
-        return 6;
-    }
-
-    if (acertouVencedor) {
-        return 4;
-    }
-
-    if (rm > rv && pv === rv) {
-        return 2;
-    }
-
-    if (rv > rm && pm === rm) {
-        return 2;
-    }
-
-    return 0;
-}
-
-document.addEventListener('DOMContentLoaded', carregarRanking);
+document.addEventListener(
+    'DOMContentLoaded',
+    carregarRanking
+);
