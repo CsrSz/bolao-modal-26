@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Auditoria de Pontuação - Bolão MODAL Web 2026</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="auditoria-page">
+
+    <div class="auditoria-container">
+
+        <header class="auditoria-header">
+
+            <div class="auditoria-header-titulos">
+                <h1>🔎 Auditoria de Pontuação</h1>
+                <p>Bolão MODAL Web 2026</p>
+            </div>
+
+            <a href="ranking.html" class="btn">
+                Voltar ao Ranking
+            </a>
+
+        </header>
+
+        <main class="auditoria-conteudo">
+
+            <section class="auditoria-card auditoria-filtros-card">
+
+                <div class="auditoria-card-titulo">
+                    <div>
+                        <h2>Filtros da Auditoria</h2>
+                        <p>
+                            Selecione um participante para visualizar a pontuação
+                            detalhada jogo por jogo.
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        id="btn-limpar-filtros"
+                        class="auditoria-btn-secundario"
+                    >
+                        Limpar filtros
+                    </button>
+                </div>
+
+                <div class="auditoria-filtros">
+
+                    <label class="auditoria-campo">
+                        <span>Participante</span>
+
+                        <select id="filtro-participante">
+                            <option value="">
+                                Selecione um participante
+                            </option>
+                        </select>
+                    </label>
+
+                    <label class="auditoria-campo">
+                        <span>Fase</span>
+
+                        <select id="filtro-fase" disabled>
+                            <option value="TODAS">
+                                Todas as fases
+                            </option>
+
+                            <option value="GRUPO">
+                                Fase de Grupos
+                            </option>
+
+                            <option value="16AVOS">
+                                16 Avos
+                            </option>
+
+                            <option value="OITAVAS">
+                                Oitavas de Final
+                            </option>
+
+                            <option value="QUARTAS">
+                                Quartas de Final
+                            </option>
+
+                            <option value="SEMIFINAL">
+                                Semifinal
+                            </option>
+
+                            <option value="TERCEIRO">
+                                Terceiro Lugar
+                            </option>
+
+                            <option value="FINAL">
+                                Final
+                            </option>
+                        </select>
+                    </label>
+
+
+                    <label class="auditoria-campo">
+                        <span>Grupo</span>
+
+                        <select id="filtro-grupo" disabled>
+                            <option value="TODOS">
+                                Todos os grupos
+                            </option>
+
+                            <option value="A">Grupo A</option>
+                            <option value="B">Grupo B</option>
+                            <option value="C">Grupo C</option>
+                            <option value="D">Grupo D</option>
+                            <option value="E">Grupo E</option>
+                            <option value="F">Grupo F</option>
+                            <option value="G">Grupo G</option>
+                            <option value="H">Grupo H</option>
+                            <option value="I">Grupo I</option>
+                            <option value="J">Grupo J</option>
+                            <option value="K">Grupo K</option>
+                            <option value="L">Grupo L</option>
+                        </select>
+                    </label>
+
+                    <label class="auditoria-campo">
+                        <span>Pontuação</span>
+
+                        <select id="filtro-pontos" disabled>
+                            <option value="TODOS">
+                                Todas as pontuações
+                            </option>
+
+                            <option value="10">10 pontos</option>
+                            <option value="6">6 pontos</option>
+                            <option value="4">4 pontos</option>
+                            <option value="2">2 pontos</option>
+                            <option value="0">0 ponto</option>
+                        </select>
+                    </label>
+
+                    <label class="auditoria-campo">
+                        <span>Situação</span>
+
+                        <select id="filtro-status" disabled>
+                            <option value="TODOS">
+                                Todas as situações
+                            </option>
+
+                            <option value="AUDITADO">
+                                Auditado
+                            </option>
+
+                            <option value="SEM_PALPITE">
+                                Sem palpite
+                            </option>
+
+                            <option value="AGUARDANDO_RESULTADO">
+                                Aguardando resultado
+                            </option>
+                        </select>
+                    </label>
+
+                    <label class="auditoria-campo auditoria-campo-pesquisa">
+                        <span>Pesquisar jogo ou seleção</span>
+
+                        <input
+                            type="search"
+                            id="filtro-pesquisa"
+                            placeholder="Ex.: Brasil, Argentina ou jogo 104"
+                            autocomplete="off"
+                            disabled
+                        >
+                    </label>
+
+                </div>
+
+            </section>
+
+            <section
+                id="auditoria-mensagem"
+                class="auditoria-mensagem"
+            >
+                Selecione um participante para iniciar a auditoria.
+            </section>
+
+            <section
+                id="auditoria-resumo"
+                class="auditoria-resumo"
+                hidden
+            >
+
+                <article class="auditoria-resumo-card auditoria-resumo-total">
+                    <span>Pontuação Total</span>
+                    <strong id="resumo-pontos-total">0</strong>
+                </article>
+
+                <article class="auditoria-resumo-card">
+                    <span>10 pontos</span>
+                    <strong id="resumo-acertos-10">0</strong>
+                </article>
+
+                <article class="auditoria-resumo-card">
+                    <span>6 pontos</span>
+                    <strong id="resumo-acertos-6">0</strong>
+                </article>
+
+                <article class="auditoria-resumo-card">
+                    <span>4 pontos</span>
+                    <strong id="resumo-acertos-4">0</strong>
+                </article>
+
+                <article class="auditoria-resumo-card">
+                    <span>2 pontos</span>
+                    <strong id="resumo-acertos-2">0</strong>
+                </article>
+
+                <article class="auditoria-resumo-card">
+                    <span>0 ponto</span>
+                    <strong id="resumo-palpite-0">0</strong>
+                </article>
+
+                <article class="auditoria-resumo-card">
+                    <span>Sem palpite</span>
+                    <strong id="resumo-sem-palpite">0</strong>
+                </article>
+
+                <article class="auditoria-resumo-card">
+                    <span>Pendentes</span>
+                    <strong id="resumo-pendentes">0</strong>
+                </article>
+
+            </section>
+
+            <section
+                id="auditoria-tabela-card"
+                class="auditoria-card auditoria-tabela-card"
+                hidden
+            >
+
+                <div class="auditoria-card-titulo">
+
+                    <div>
+                        <h2 id="auditoria-tabela-titulo">
+                            Jogos auditados
+                        </h2>
+
+                        <p id="auditoria-total-exibido">
+                            0 jogos encontrados
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="tabela-responsiva">
+
+                    <table class="auditoria-tabela">
+
+                        <thead>
+                            <tr>
+                                <th>Jogo</th>
+                                <th>Fase</th>
+                                <th>Confronto</th>
+                                <th>Palpite</th>
+                                <th>Resultado</th>
+                                <th>Pontos</th>
+                                <th>Regra aplicada</th>
+                                <th>Situação</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="auditoria-body">
+
+                            <tr>
+                                <td colspan="8">
+                                    Selecione um participante.
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auditoria.js"></script>
+
+</body>
+
+</html>
