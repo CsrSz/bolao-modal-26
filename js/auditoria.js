@@ -1,5 +1,53 @@
 'use strict';
 
+async function validarAcessoAuditoria() {
+    const {
+        data: { user },
+        error: erroUsuario
+    } = await supabaseClient.auth.getUser();
+
+    if (erroUsuario || !user) {
+        window.location.replace('login-admin.html');
+        return false;
+    }
+
+    const {
+        data: autorizacao,
+        error: erroAutorizacao
+    } = await supabaseClient
+        .from('admin_usuarios')
+        .select('user_id')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+    if (erroAutorizacao) {
+        console.error(
+            'Erro ao validar autorização da auditoria:',
+            erroAutorizacao
+        );
+
+        await supabaseClient.auth.signOut();
+
+        window.location.replace(
+            'login-admin.html?erro=autorizacao'
+        );
+
+        return false;
+    }
+
+    if (!autorizacao) {
+        await supabaseClient.auth.signOut();
+
+        window.location.replace(
+            'login-admin.html?erro=sem-permissao'
+        );
+
+        return false;
+    }
+
+    return true;
+}
+
 const estadoAuditoria = {
     participantes: [],
     jogos: [],
@@ -642,6 +690,12 @@ function configurarEventos() {
 }
 
 async function iniciarAuditoria() {
+    const acessoValido = await validarAcessoAuditoria();
+
+    if (!acessoValido) {
+        return;
+    }
+
     configurarEventos();
     alterarEstadoFiltros(false);
     esconderResultados();

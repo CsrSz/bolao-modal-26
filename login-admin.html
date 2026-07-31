@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Login Administrativo</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 24px;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(56, 189, 248, 0.20),
+                    transparent 34%
+                ),
+                linear-gradient(
+                    145deg,
+                    #061a33,
+                    #08284d
+                );
+        }
+
+        .login-admin-card {
+            width: 100%;
+            max-width: 420px;
+            padding: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+        }
+
+        .login-admin-titulo {
+            margin: 0 0 8px;
+            color: #08284d;
+            text-align: center;
+        }
+
+        .login-admin-subtitulo {
+            margin: 0 0 26px;
+            color: #526273;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .login-admin-form {
+            display: grid;
+            gap: 18px;
+        }
+
+        .login-admin-campo {
+            display: grid;
+            gap: 7px;
+        }
+
+        .login-admin-campo label {
+            color: #08284d;
+            font-weight: 700;
+        }
+
+        .login-admin-campo input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            font: inherit;
+        }
+
+        .login-admin-campo input:focus {
+            border-color: #38bdf8;
+            outline: 3px solid rgba(56, 189, 248, 0.22);
+        }
+
+        .login-admin-botao {
+            min-height: 46px;
+            border: 0;
+            border-radius: 9px;
+            background: #ff8300;
+            color: #ffffff;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .login-admin-botao:hover {
+            background: #e87500;
+        }
+
+        .login-admin-botao:disabled {
+            cursor: wait;
+            opacity: 0.65;
+        }
+
+        .login-admin-mensagem {
+            min-height: 22px;
+            margin: 0;
+            color: #b42318;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .login-admin-voltar {
+            display: block;
+            margin-top: 20px;
+            color: #08284d;
+            text-align: center;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .login-admin-voltar:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <main class="login-admin-card">
+
+        <h1 class="login-admin-titulo">
+            🔐 Área Administrativa
+        </h1>
+
+        <p class="login-admin-subtitulo">
+            Entre com a conta administrativa autorizada.
+        </p>
+
+        <form
+            id="login-admin-form"
+            class="login-admin-form"
+        >
+
+            <div class="login-admin-campo">
+
+                <label for="login-admin-email">
+                    E-mail
+                </label>
+
+                <input
+                    id="login-admin-email"
+                    name="email"
+                    type="email"
+                    autocomplete="username"
+                    required
+                >
+
+            </div>
+
+            <div class="login-admin-campo">
+
+                <label for="login-admin-senha">
+                    Senha
+                </label>
+
+                <input
+                    id="login-admin-senha"
+                    name="senha"
+                    type="password"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+            <button
+                id="login-admin-botao"
+                class="login-admin-botao"
+                type="submit"
+            >
+                Entrar
+            </button>
+
+            <p
+                id="login-admin-mensagem"
+                class="login-admin-mensagem"
+                role="alert"
+                aria-live="polite"
+            ></p>
+
+        </form>
+
+        <a
+            class="login-admin-voltar"
+            href="index.html"
+        >
+            Voltar ao sistema
+        </a>
+
+    </main>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+    <script src="js/supabase.js"></script>
+
+    <script>
+
+        const formulario =
+            document.getElementById('login-admin-form');
+
+        const campoEmail =
+            document.getElementById('login-admin-email');
+
+        const campoSenha =
+            document.getElementById('login-admin-senha');
+
+        const botaoEntrar =
+            document.getElementById('login-admin-botao');
+
+        const mensagem =
+            document.getElementById('login-admin-mensagem');
+
+        formulario.addEventListener(
+            'submit',
+            async evento => {
+
+                evento.preventDefault();
+
+                mensagem.textContent = '';
+
+                botaoEntrar.disabled = true;
+                botaoEntrar.textContent = 'Entrando...';
+
+                const email = campoEmail.value.trim();
+                const password = campoSenha.value;
+
+                const {
+                    data,
+                    error: erroLogin
+                } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (erroLogin || !data.user) {
+
+                    mensagem.textContent =
+                        'E-mail ou senha inválidos.';
+
+                    botaoEntrar.disabled = false;
+                    botaoEntrar.textContent = 'Entrar';
+
+                    return;
+                }
+
+                const {
+                    data: autorizacao,
+                    error: erroAutorizacao
+                } = await supabase
+                    .from('admin_usuarios')
+                    .select('user_id')
+                    .eq('user_id', data.user.id)
+                    .maybeSingle();
+
+                if (erroAutorizacao || !autorizacao) {
+
+                    await supabase.auth.signOut();
+
+                    mensagem.textContent =
+                        'Esta conta não possui acesso administrativo.';
+
+                    botaoEntrar.disabled = false;
+                    botaoEntrar.textContent = 'Entrar';
+
+                    return;
+                }
+
+                window.location.replace('admin.html');
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

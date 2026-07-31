@@ -1,34 +1,56 @@
-const SENHA_ADMIN = 'Modal@2026';
-
 let jogos = [];
 let resultados = [];
 let grupoAtual = 'A';
 
-function validarAcessoAdmin() {
+async function validarAcessoAdmin() {
 
-    const acessoLiberado =
-        sessionStorage.getItem('adminLiberado') === 'SIM';
+    const {
+        data: { user },
+        error: erroUsuario
+    } = await supabase.auth.getUser();
 
-    if (acessoLiberado) {
-        return true;
+    if (erroUsuario || !user) {
+        window.location.replace('login-admin.html');
+        return false;
     }
 
-    const senha = prompt('Informe a senha do Admin:');
+    const {
+        data: autorizacao,
+        error: erroAutorizacao
+    } = await supabase
+        .from('admin_usuarios')
+        .select('user_id')
+        .eq('user_id', user.id)
+        .maybeSingle();
 
-    if (senha === SENHA_ADMIN) {
+    if (erroAutorizacao) {
 
-        sessionStorage.setItem('adminLiberado', 'SIM');
+        console.error(
+            'Erro ao validar autorização administrativa:',
+            erroAutorizacao
+        );
 
-        return true;
+        await supabase.auth.signOut();
 
+        window.location.replace(
+            'login-admin.html?erro=autorizacao'
+        );
+
+        return false;
     }
 
-    alert('Acesso negado');
+    if (!autorizacao) {
 
-    window.location.href = 'index.html';
+        await supabase.auth.signOut();
 
-    return false;
+        window.location.replace(
+            'login-admin.html?erro=sem-permissao'
+        );
 
+        return false;
+    }
+
+    return true;
 }
 
 async function carregarJogos() {
@@ -413,12 +435,14 @@ async function apagarResultado(jogoId) {
 
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
-    if (!validarAcessoAdmin()) {
+    const acessoValido = await validarAcessoAdmin();
+
+    if (!acessoValido) {
         return;
     }
 
-    carregarJogosAdmin();
+    await carregarJogosAdmin();
 
 });
